@@ -1,0 +1,308 @@
+{
+  "points": [
+    {
+      "id": 1,
+      "categorie": "Électricité",
+      "intitule": "Éclairage sous hublots étanches conforme",
+      "typeSST": "HT / BT",
+      "reference": "NF C 15-100"
+    },
+    {
+      "id": 2,
+      "categorie": "Électricité",
+      "intitule": "Éclairage suffisant du local",
+      "typeSST": "HT / BT",
+      "reference": "Arrêté du 23 juin 1978 - Article 17 / DTU 65.3"
+    },
+    {
+      "id": 3,
+      "categorie": "Électricité",
+      "intitule": "Présence d'un éclairage de sécurité (bloc autonome de secours)",
+      "typeSST": "HT / BT",
+      "reference": "NF C 15-100"
+    },
+    {
+      "id": 4,
+      "categorie": "Électricité",
+      "intitule": "Coupure extérieure force et éclairage distinctes et repérées sous boîtier rouge",
+      "typeSST": "HT / BT",
+      "reference": "Arrêté du 23 juin 1978 - Article 29"
+    },
+    {
+      "id": 5,
+      "categorie": "Électricité",
+      "intitule": "Disjoncteur mono 16A avec différentiel lié à la coupure extérieure (alimentation SKID)",
+      "typeSST": "HT / BT",
+      "reference": "NF C 15-100"
+    },
+    {
+      "id": 6,
+      "categorie": "Électricité",
+      "intitule": "Disjoncteur départ alimentation SKID étiqueté",
+      "typeSST": "HT / BT",
+      "reference": "Guide des préconisations ELM"
+    },
+    {
+      "id": 7,
+      "categorie": "Électricité",
+      "intitule": "Électricité du local fonctionnelle (force primaire, secondaire, éclairage et éclairage de secours)",
+      "typeSST": "HT / BT",
+      "reference": "Guide des préconisations ELM"
+    },
+
+    {
+      "id": 8,
+      "categorie": "Local sous-station",
+      "intitule": "Présence d'un repérage « Accès interdit au public »",
+      "typeSST": "HT / BT",
+      "reference": "Arrêté du 23 juin 1978 - Article 21 / DTU 65.3 §2.2.2"
+    },
+    {
+      "id": 9,
+      "categorie": "Local sous-station",
+      "intitule": "Seuil de rétention H = 15 cm ou rétention réglementaire selon la puissance installée (5 m³ si P < 2 000 kW ou 10 m³ si P > 2 000 kW)",
+      "typeSST": "HT / BT",
+      "reference": "DTU 65.3 §2.4"
+    },
+
+    {
+      "id": 10,
+      "categorie": "Local sous-station",
+      "intitule": "Ventilation haute conforme (16 dm² surface minimale réglementaire)",
+      "typeSST": "HT / BT",
+      "reference": "DTU 65.3 §2.4"
+    },
+    {
+      "id": 11,
+      "categorie": "Local sous-station",
+      "intitule": "Ventilation basse conforme (16 dm² surface minimale réglementaire)",
+      "typeSST": "HT / BT",
+      "reference": "DTU 65.3 §2.4"
+    },
+    {
+      "id": 12,
+      "categorie": "Local sous-station",
+      "intitule": "Prises d'air protégées contre l'introduction de corps étrangers (grillage ou dispositif équivalent)",
+      "typeSST": "HT / BT",
+      "reference": "Arrêté du 23 juin 1978 - Article 28"
+    },
+    {
+      "id": 13,
+      "categorie": "Local sous-station",
+      "intitule": "Température ambiante du local inférieure à 30 °C pour une température extérieure de +15 °C",
+      "typeSST": "HT / BT",
+      "reference": "Arrêté du 23 juin 1978 - Article 28"
+    },
+
+    {
+      "id": 14,
+      "categorie": "Local sous-station",
+      "intitule": "Présence d'un puisard (minimum 40x40x40 cm)",
+      "typeSST": "HT / BT",
+      "reference": "DTU 65.3 §2.5"
+    },
+    {
+      "id": 15,
+      "categorie": "Local sous-station",
+      "intitule": "Présence d'une pompe de relevage haute température raccordée au réseau d'évacuation",
+      "typeSST": "HT / BT",
+      "reference": "DTU 65.3 §2.5 / Arrêté du 23 juin 1978 - Article 9"
+    },
+    {
+      "id": 16,
+      "categorie": "Local sous-station",
+      "intitule": "Présence d'un déclencheur manuel de la pompe de relevage à proximité de la porte d'entrée",
+      "typeSST": "HT / BT",
+      "reference": "Arrêté du 23 juin 1978 - Article 9"
+    },
+    {
+      "id": 17,
+      "categorie": "Local sous-station",
+      "intitule": "Présence d'un siphon de sol raccordé au réseau d'évacuation",
+      "typeSST": "HT",
+      "reference": "DTU 65.3"
+    },
+    {
+      "id": 18,
+      "categorie": "Local sous-station",
+      "intitule": "Porte coupe-feu 2h donnant directement sur l'extérieur",
+      "typeSST": "HT / BT",
+      "reference": "Arrêté du 23 juin 1978"
+    },
+    {
+      "id": 19,
+      "categorie": "Local sous-station",
+      "intitule": "Canon de serrure DALKIA en place",
+      "typeSST": "HT / BT",
+      "reference": "Guide des Préconisations ELM"
+    },
+    {
+      "id": 20,
+      "categorie": "Local sous-station",
+      "intitule": "Aucun réseau étranger au fonctionnement de la chaufferie ne doit cheminer dans le volume chaufferie (gaz, eau potable, électricité,eau usée, etc.)",
+      "typeSST": "HT / BT",
+      "reference": "Arrêté du 23 juin 1978"
+    },
+    {
+      "id": 21,
+      "categorie": "Local sous-station",
+      "intitule": "Toutes les réservations mur/sol/plafond refermées et étanchéifiées",
+      "typeSST": "HT / BT",
+      "reference": "Guide des Préconisations ELM"
+    },
+    {
+      "id": 22,
+      "categorie": "Hydraulique secondaire",
+      "intitule": "Présence de purges d'air (collecteur principale & Points hauts)",
+      "typeSST": "HT / BT",
+      "reference": "Guide des Préconisations ELM"
+    },
+    {
+      "id": 23,
+      "categorie": "Hydraulique secondaire",
+      "intitule": "Débit secondaire variable",
+      "typeSST": "HT / BT",
+      "reference": "Guide des Préconisations ELM"
+    },
+    {
+      "id": 24,
+      "categorie": "Hydraulique secondaire",
+      "intitule": "Adoucisseur sur eau d'appoint et Th nul lors du démarrage",
+      "typeSST": "HT / BT",
+      "reference": "Guide des Préconisations ELM"
+    },
+    {
+      "id": 25,
+      "categorie": "Hydraulique secondaire",
+      "intitule": "Point de puisage eau froide à proximité du puisard",
+      "typeSST": "HT / BT",
+      "reference": "Guide des Préconisations ELM"
+    },
+    {
+      "id": 26,
+      "categorie": "Hydraulique secondaire",
+      "intitule": "Présence d'un groupe de maintien de pression",
+      "typeSST": "HT / BT",
+      "reference": "Guide des Préconisations ELM"
+    },
+    {
+      "id": 27,
+      "categorie": "Hydraulique secondaire",
+      "intitule": "Présence d'un pot à boues",
+      "typeSST": "HT / BT",
+      "reference": "Guide des Préconisations ELM"
+    },
+    {
+      "id": 28,
+      "categorie": "Hydraulique secondaire",
+      "intitule": "Présence d'un filtre en débit plein retour générale de l'échangeur",
+      "typeSST": "HT / BT",
+      "reference": "Guide des Préconisations ELM"
+    },
+    {
+      "id": 29,
+      "categorie": "Hydraulique secondaire",
+      "intitule": "Présence des soupape de sécurité",
+      "typeSST": "HT / BT",
+      "reference": "Guide des Préconisations ELM"
+    },
+    {
+      "id": 30,
+      "categorie": "Hydraulique secondaire",
+      "intitule": "La régulation assure un débit d'irrigation minimal de l'échangeur pour éviter mise en sécurité de la sous-station",
+      "typeSST": "HT / BT",
+      "reference": "Guide des Préconisations ELM"
+    },
+    {
+      "id": 31,
+      "categorie": "Hydraulique secondaire",
+      "intitule": "Calorifuge des tuyauteries et générateurs obligatoire. Propriétés de réaction au feu exigées selon sécurité incendie.",
+      "typeSST": "HT / BT",
+      "reference": "Arrêté du 23 juin 1978 - Article 25"
+    },
+    {
+      "id": 32,
+      "categorie": "Hydraulique secondaire",
+      "intitule": "Ensemble de l'installation secondaire terminée, bon pour exploitation",
+      "typeSST": "HT / BT",
+      "reference": "Guide des Préconisations ELM"
+    },
+    {
+      "id": 33,
+      "categorie": "Sécurité / Protection incendie / Accès",
+      "intitule": "Caillebotis au-dessus du puisard",
+      "typeSST": "HT / BT",
+      "reference": "Code du travail"
+    },
+    {
+      "id": 34,
+      "categorie": "Sécurité / Protection incendie / Accès",
+      "intitule": "Extincteur et signalisation incendie",
+      "typeSST": "HT / BT",
+      "reference": "Code du travail - Article R.232-12-17"
+    },
+    {
+      "id": 35,
+      "categorie": "Sécurité / Protection incendie / Accès",
+      "intitule": "Absence de stockage de matériaux divers en sous station",
+      "typeSST": "HT / BT",
+      "reference": "Code du travail - Article. R. 232-1-14 & Arrêté du 23 juin 1978 (chaufferies) - Article 16"
+    },
+    {
+      "id": 36,
+      "categorie": "Sécurité / Protection incendie / Accès",
+      "intitule": "Local propre",
+      "typeSST": "HT / BT",
+      "reference": "Code du travail - Article. R. 232-1-14 & Arrêté du 23 juin 1978 - Article 10"
+    },
+    {
+      "id": 37,
+      "categorie": "Sécurité / Protection incendie / Accès",
+      "intitule": "Au moins un dégagement de largeur 0,80m",
+      "typeSST": "HT / BT",
+      "reference": "Code du travail - Article R. 4227-5"
+    },
+    {
+      "id": 38,
+      "categorie": "Sécurité / Protection incendie / Accès",
+      "intitule": "Arrase inférieur tuyauterie isolée +2m",
+      "typeSST": "HT / BT",
+      "reference": "Guide des Préconisations Dalkia"
+    },
+    {
+      "id": 39,
+      "categorie": "Sécurité / Protection incendie / Accès",
+      "intitule": "Accès sécurisé (escalier avec rampe, etc…)",
+      "typeSST": "HT / BT",
+      "reference": "Code du travail"
+    },
+    {
+      "id": 40,
+      "categorie": "Sécurité / Protection incendie / Accès",
+      "intitule": "Sol en bon état (non glissant ou défectueux)",
+      "typeSST": "HT / BT",
+      "reference": "Code du travail & Arrêté du 23 juin 1978 - Article 16"
+    },
+    {
+      "id": 41,
+      "categorie": "Sécurité / Protection incendie / Accès",
+      "intitule": "Poste de travail non exposé de façon répétitive aux bruits",
+      "typeSST": "HT / BT",
+      "reference": "Code du travail"
+    },
+    {
+      "id": 42,
+      "categorie": "Sécurité / Protection incendie / Accès",
+      "intitule": "Poste de travail non exposé à un environnement non sûr (absence de risque d'agression)",
+      "typeSST": "HT / BT",
+      "reference": "Code du travail"
+    },
+    {
+      "id": 43,
+      "categorie": "Sécurité / Protection incendie / Accès",
+      "intitule": "Absence de risque de choc avec des parties saillantes",
+      "typeSST": "HT / BT",
+      "reference": "Code du travail"
+    }
+  ]
+}

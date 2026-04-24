@@ -16,8 +16,8 @@
   <h1>Point de contrôle</h1>
 
   <!-- Progression -->
-  <div id="progression" style="font-weight:bold; margin-bottom:5px;"></div>
-  <progress id="progressBar" value="0" max="100" style="width:100%;"></progress>
+  <div id="progression"></div>
+  <progress id="progressBar" value="0" max="100"></progress>
 
   <!-- Catégorie -->
   <h2 id="categorie"></h2>
@@ -27,7 +27,7 @@
 
   <!-- Photo conforme -->
   <div id="photoConformeBloc">
-    <label>Photo (optionnelle)</label><br>
+    <label>Photo (optionnelle)</label>
     <input
       type="file"
       id="photoConforme"
@@ -36,14 +36,10 @@
     >
   </div>
 
-  <br>
-
-  <!-- Actions -->
+  <!-- Boutons actions -->
   <button id="btnRetour" onclick="retour()">⬅️ Précédent</button>
   <button id="btnConforme" onclick="conforme()">✅ Conforme</button>
   <button id="btnNonConforme" onclick="nonConforme()">❌ Non conforme</button>
-
-  <br><br>
 
   <button id="btnPdf" onclick="genererPDF()" disabled>
     📄 Générer le rapport PDF
@@ -54,19 +50,26 @@
   </button>
 
   <!-- Bloc NON CONFORME -->
-  <div id="nonConformeBloc" style="display:none; margin-top:20px;">
-    <label>Commentaire (obligatoire)</label><br>
-    <textarea id="commentaire" rows="4" cols="40"></textarea><br><br>
+  <div id="nonConformeBloc">
+    <label>Commentaire (obligatoire)</label>
+    <textarea id="commentaire" rows="4"></textarea>
 
-    <label>Photo (obligatoire)</label><br>
+    <label>Photo (obligatoire)</label>
     <input
       type="file"
       id="photo"
       accept="image/*"
       capture="environment"
-    ><br><br>
+    >
 
     <button onclick="validerNonConforme()">Valider et continuer</button>
   </div>
 
-  <!-- Librairie
+  <!-- Librairie PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Script application -->
+  <script src="app.js"></script>
+
+</body>
+</html>

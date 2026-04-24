@@ -2,12 +2,12 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Inspection</title>
+  <title>Inspection terrain</title>
 
   <!-- CSS -->
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="style.css">
-  <script src="app.js"></script>
+
+  <!-- PWA -->
   <link rel="manifest" href="manifest.json">
 </head>
 
@@ -15,13 +15,17 @@
 
   <h1>Point de contrôle</h1>
 
+  <!-- Progression -->
+  <div id="progression" style="font-weight:bold; margin-bottom:5px;"></div>
+  <progress id="progressBar" value="0" max="100" style="width:100%;"></progress>
+
   <!-- Catégorie -->
   <h2 id="categorie"></h2>
 
   <!-- Intitulé -->
   <p id="intitule">Chargement…</p>
 
-  <!-- Photo conforme (optionnelle) -->
+  <!-- Photo conforme -->
   <div id="photoConformeBloc">
     <label>Photo (optionnelle)</label><br>
     <input
@@ -34,12 +38,19 @@
 
   <br>
 
-  <!-- Boutons -->
+  <!-- Actions -->
+  <button id="btnRetour" onclick="retour()">⬅️ Précédent</button>
   <button id="btnConforme" onclick="conforme()">✅ Conforme</button>
   <button id="btnNonConforme" onclick="nonConforme()">❌ Non conforme</button>
 
+  <br><br>
+
   <button id="btnPdf" onclick="genererPDF()" disabled>
-  Générer le PDF
+    📄 Générer le rapport PDF
+  </button>
+
+  <button onclick="nouvelleInspection()">
+    🆕 Nouvelle inspection
   </button>
 
   <!-- Bloc NON CONFORME -->
@@ -58,16 +69,4 @@
     <button onclick="validerNonConforme()">Valider et continuer</button>
   </div>
 
-  <hr>
-
-  <!-- PDF -->
-  <button onclick="genererPDF()">📄 Générer le rapport PDF</button>
-
-  <!-- Librairie PDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-  <!-- Script de l’application -->
-  <script src="app.js"></script>
-
-</body>
-</html>
+  <!-- Librairie

@@ -35,8 +35,12 @@
   <br>
 
   <!-- Boutons -->
-  <button onclick="conforme()">✅ Conforme</button>
-  <button onclick="nonConforme()">❌ Non conforme</button>
+  <button id="btnConforme" onclick="conforme()">✅ Conforme</button>
+  <button id="btnNonConforme" onclick="nonConforme()">❌ Non conforme</button>
+
+  <button id="btnPdf" onclick="genererPDF()" disabled>
+  Générer le PDF
+  </button>
 
   <!-- Bloc NON CONFORME -->
   <div id="nonConformeBloc" style="display:none; margin-top:20px;">

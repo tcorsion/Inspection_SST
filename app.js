@@ -18,18 +18,30 @@ fetch("checklist.json")
 
 function afficherPoint() {
   document.getElementById("nonConformeBloc").style.display = "none";
+
+  // Désactive tout d’abord
   document.querySelectorAll("button").forEach(b => b.disabled = true);
+
   document.getElementById("photoConforme").value = "";
-    if (index < points.length) {
+
+  if (index < points.length) {
     document.getElementById("categorie").textContent =
       points[index].categorie;
 
     document.getElementById("intitule").textContent =
       points[index].intitule;
+
+    // ✅ RÉACTIVATION des boutons principaux
+    document.getElementById("btnConforme").disabled = false;
+    document.getElementById("btnNonConforme").disabled = false;
+
   } else {
     document.getElementById("categorie").textContent = "";
     document.getElementById("intitule").textContent =
       "Inspection terminée ✅";
+
+    // ✅ Activer le bouton PDF
+    document.getElementById("btnPdf").disabled = false;
   }
 }
 

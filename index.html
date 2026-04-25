@@ -37,37 +37,38 @@
     <p id="intitule">Chargement…</p>
   </div>
 
-  <!-- Photo conforme -->
-  <div id="photoConformeBloc">
-    <label>Photo (optionnelle)</label>
-    <input
-      type="file"
-      id="photoConforme"
-      accept="image/*"
-      capture="environment"
-    >
-  </div>
+<!-- Zone Commentaire / Photo -->
+<div id="zoneObservation">
+  <label id="labelCommentaire">Commentaire</label>
+  <textarea id="commentaire" rows="4"
+    placeholder="Observations, remarques…"></textarea>
 
-  <!-- Remarques générales -->
-  <div style="margin-bottom: 24px;">
-    <label for="remarquesGenerales">
-      Remarques générales
-    </label>
-    <textarea
-      id="remarquesGenerales"
-      rows="4"
-      placeholder="Observations, contexte, contraintes, remarques globales…"
-    ></textarea>
-  </div>
+  <label id="labelPhoto">Photo</label>
+  <input
+    type="file"
+    id="photo"
+    accept="image/*"
+    capture="environment"
+  >
+</div>
 
-  <!-- Boutons actions -->
-  <button id="btnRetour" onclick="retour()">⬅️ Précédent</button>
+<!-- Boutons Conforme / Non conforme -->
+<div id="blocDecision">
+  <button id="btnConforme" onclick="conforme()">✅<br>Conforme</button>
+  <button id="btnNonConforme" onclick="nonConforme()">❌<br>Non conforme</button>
+</div>
 
-  <!-- Boutons Conforme / Non conforme -->
-  <div id="blocDecision">
-    <button id="btnConforme" onclick="conforme()">✅<br>Conforme</button>
-    <button id="btnNonConforme" onclick="nonConforme()">❌<br>Non conforme</button>
-  </div>
+<!-- Validation Non conforme -->
+<button
+  id="btnValiderNonConforme"
+  onclick="validerNonConforme()"
+  disabled
+>
+  Valider et continuer
+</button>
+
+<!-- Navigation -->
+<button id="btnRetour" onclick="retour()">⬅️ Précédent</button>
 
   <button id="btnPdf" onclick="genererPDF()" disabled>
     📄 Générer le rapport PDF
@@ -76,28 +77,6 @@
   <button id="btnNouvelleInspection" onclick="nouvelleInspection()">
   🆕 Nouvelle inspection
   </button>
-
-  <!-- Bloc NON CONFORME -->
-  <div id="nonConformeBloc">
-    <label>Commentaire (obligatoire)</label>
-    <textarea id="commentaire" rows="4"></textarea>
-
-    <label>Photo (obligatoire)</label>
-    <input
-      type="file"
-      id="photo"
-      accept="image/*"
-      capture="environment"
-    >
-
-    <!-- ✅ UN SEUL bouton, bien identifié -->
-      <button
-       id="btnValiderNonConforme"
-        onclick="validerNonConforme()"
-      >
-       Valider et continuer
-      </button>
-  </div>
 
   <!-- Librairie PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>

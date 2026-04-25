@@ -139,42 +139,30 @@ function afficherPoint() {
 function conforme() {
   if (index >= points.length) return;
 
-  const fileInput = document.getElementById("photoConforme");
+  // Nettoyage
+  document.getElementById("zoneObservation").classList.remove("obligatoire");
+  document.getElementById("commentaire").value = "";
+  document.getElementById("photo").value = "";
+  document.getElementById("btnValiderNonConforme").disabled = true;
 
-  if (fileInput && fileInput.files && fileInput.files.length > 0) {
-    const reader = new FileReader();
-    reader.onload = function () {
-      ajouterReponse("Conforme", "", reader.result);
-      fileInput.value = "";
-    };
-    reader.readAsDataURL(fileInput.files[0]);
-  } else {
-    ajouterReponse("Conforme", "", "");
-  }
+  ajouterReponse("Conforme", "", "");
 }
 
 function nonConforme() {
   if (index >= points.length) return;
 
-  // Réinitialiser la photo conforme
-  const photoConforme = document.getElementById("photoConforme");
-  if (photoConforme) photoConforme.value = "";
+  // Rendre champs obligatoires visuellement
+  document.getElementById("zoneObservation").classList.add("obligatoire");
 
-  // Afficher le bloc NC
-  document.getElementById("nonConformeBloc").style.display = "block";
-
-  // ✅ ACTIVER le bouton Valider
-  const btnValider = document.getElementById("btnValiderNonConforme");
-  if (btnValider) btnValider.disabled = false;
+  // Activer le bouton Valider
+  document.getElementById("btnValiderNonConforme").disabled = false;
 }
 
 function validerNonConforme() {
-  if (index >= points.length) return;
-
   const commentaire = document.getElementById("commentaire").value.trim();
   const fileInput = document.getElementById("photo");
 
-  if (commentaire === "" || !fileInput || fileInput.files.length === 0) {
+  if (commentaire === "" || fileInput.files.length === 0) {
     alert("Commentaire et photo obligatoires");
     return;
   }
@@ -183,12 +171,10 @@ function validerNonConforme() {
   reader.onload = function () {
     ajouterReponse("Non conforme", commentaire, reader.result);
 
-    document.getElementById("nonConformeBloc").style.display = "none";
+    document.getElementById("zoneObservation").classList.remove("obligatoire");
     document.getElementById("commentaire").value = "";
     document.getElementById("photo").value = "";
-
-    const photoConforme = document.getElementById("photoConforme");
-    if (photoConforme) photoConforme.value = "";
+    document.getElementById("btnValiderNonConforme").disabled = true;
   };
 
   reader.readAsDataURL(fileInput.files[0]);

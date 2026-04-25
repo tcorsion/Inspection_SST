@@ -1,6 +1,6 @@
-/* =========================
-   BASE MOBILE
-   ========================= */
+/* ===============================
+   BASE MOBILE XXL
+   =============================== */
 * {
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont,
@@ -9,76 +9,83 @@
 
 body {
   margin: 0;
-  padding: 18px;
+  padding: 20px;
   background-color: #f4f6f9;
   color: #111;
+  font-size: 20px; /* 👉 BASE GLOBALE PLUS GRANDE */
 }
 
-/* =========================
+/* ===============================
    TITRES
-   ========================= */
+   =============================== */
 h1 {
-  font-size: 26px;          /* PLUS GRAND */
+  font-size: 30px;   /* ✅ TRÈS LISIBLE */
   text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 h2 {
-  font-size: 20px;          /* PLUS GRAND */
+  font-size: 24px;
   font-weight: 600;
   color: #0b3c5d;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
-/* =========================
+/* ===============================
    PROGRESSION
-   ========================= */
+   =============================== */
 #progression {
-  font-size: 16px;          /* PLUS GRAND */
+  font-size: 20px;
   text-align: center;
-  margin-bottom: 8px;
-  color: #444;
+  margin-bottom: 10px;
+  font-weight: 600;
 }
 
 progress {
   width: 100%;
-  height: 20px;             /* PLUS ÉPAIS */
-  border-radius: 10px;
-  margin-bottom: 18px;
+  height: 24px;      /* ✅ BIEN VISIBLE */
+  border-radius: 12px;
+  margin-bottom: 24px;
 }
 
-/* =========================
+/* ===============================
    INTITULÉ DU POINT
-   ========================= */
+   =============================== */
 #intitule {
-  font-size: 22px;          /* TRÈS LISIBLE */
-  font-weight: 500;
+  font-size: 26px;   /* ✅ PLUS BESOIN DE ZOOM */
+  font-weight: 600;
   line-height: 1.4;
   background: #ffffff;
-  padding: 18px;
-  border-radius: 14px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-  margin-bottom: 20px;
+  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  margin-bottom: 28px;
 }
 
-/* =========================
+/* ===============================
    INPUT PHOTO
-   ========================= */
-input[type="file"] {
-  font-size: 17px;          /* PLUS GRAND */
-  margin: 10px 0 18px 0;
+   =============================== */
+label {
+  font-size: 20px;
+  font-weight: 600;
 }
 
-/* =========================
-   BOUTONS (TRÈS IMPORTANT)
-   ========================= */
+input[type="file"] {
+  font-size: 20px;
+  margin: 12px 0 24px 0;
+  width: 100%;
+}
+
+/* ===============================
+   BOUTONS TERRAIN XXL
+   =============================== */
 button {
   width: 100%;
-  padding: 18px;            /* PLUS HAUT */
-  margin: 10px 0;
-  font-size: 19px;          /* PLUS GRAND */
-  font-weight: bold;
-  border-radius: 16px;
+  padding: 22px;     /* ✅ GROS BOUTONS */
+  margin: 14px 0;
+  font-size: 22px;   /* ✅ LISIBLE SANS ZOOM */
+  font-weight: 700;
+  border-radius: 18px;
   border: none;
   cursor: pointer;
 }
@@ -87,9 +94,9 @@ button:disabled {
   opacity: 0.45;
 }
 
-/* =========================
+/* ===============================
    COULEURS MÉTIER
-   ========================= */
+   =============================== */
 #btnConforme {
   background-color: #2e7d32;
   color: white;
@@ -110,27 +117,32 @@ button:disabled {
   color: white;
 }
 
-/* =========================
+/* ===============================
    BLOC NON CONFORME
-   ========================= */
+   =============================== */
 #nonConformeBloc {
   display: none;
   background: #fff1f1;
-  border-left: 6px solid #c62828;
-  padding: 18px;
-  border-radius: 14px;
-  margin-top: 20px;
-}
-
-#nonConformeBloc label {
-  font-size: 18px;
-  font-weight: 600;
+  border-left: 8px solid #c62828;
+  padding: 22px;
+  border-radius: 16px;
+  margin-top: 28px;
 }
 
 #nonConformeBloc textarea {
   width: 100%;
-  font-size: 18px;
-  padding: 12px;
-  margin: 10px 0 16px 0;
-  border-radius: 10px;
+  font-size: 22px;
+  padding: 16px;
+  margin: 12px 0 18px 0;
+  border-radius: 12px;
+}
+
+#nomSousStation {
+  width: 100%;
+  padding: 18px;
+  font-size: 22px;
+  border-radius: 14px;
+  border: 2px solid #ccc;
+  margin-top: 8px;
+  margin-bottom: 16px;
 }

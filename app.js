@@ -1,6 +1,7 @@
 let reponses = [];
 let points = [];
 let index = 0;
+let nomSousStation = "";
 
 // ✅ Multi-inspections : ID persistant
 let inspectionId = localStorage.getItem("inspectionId");
@@ -10,6 +11,22 @@ if (!inspectionId) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // ✅ Gestion du champ "nomSousStation" (DOM prêt)
+  const champNom = document.getElementById("nomSousStation");
+  if (champNom) {
+    const nomSauvegarde = localStorage.getItem(inspectionId + "_nom");
+    if (nomSauvegarde) {
+      nomSousStation = nomSauvegarde;
+      champNom.value = nomSousStation;
+    }
+
+    champNom.addEventListener("input", () => {
+      nomSousStation = champNom.value.trim();
+      localStorage.setItem(inspectionId + "_nom", nomSousStation);
+    });
+  }
+
+  // ✅ Charger la checklist
   fetch("checklist.json")
     .then(res => {
       if (!res.ok) throw new Error("Impossible de charger checklist.json");
@@ -34,34 +51,27 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function afficherPoint() {
-  // Cache bloc non conforme
   const blocNC = document.getElementById("nonConformeBloc");
   if (blocNC) blocNC.style.display = "none";
 
-  // Désactive tous les boutons d'abord
   document.querySelectorAll("button").forEach(b => (b.disabled = true));
 
-  // Reset des inputs photo
   const photoConforme = document.getElementById("photoConforme");
   if (photoConforme) photoConforme.value = "";
 
-  // ✅ Bouton retour
   const btnRetour = document.getElementById("btnRetour");
   if (btnRetour) btnRetour.disabled = (index === 0);
 
-  // ✅ Affichage point
   if (index < points.length) {
     document.getElementById("categorie").textContent = points[index].categorie || "";
     document.getElementById("intitule").textContent = points[index].intitule || "";
 
-    // ✅ Progression (si présents dans le HTML)
     const prog = document.getElementById("progression");
     if (prog) prog.textContent = `Point ${index + 1} / ${points.length}`;
 
     const bar = document.getElementById("progressBar");
     if (bar) bar.value = ((index + 1) / points.length) * 100;
 
-    // ✅ Réactiver boutons principaux
     document.getElementById("btnConforme").disabled = false;
     document.getElementById("btnNonConforme").disabled = false;
   } else {
@@ -83,7 +93,6 @@ function conforme() {
 
   const fileInput = document.getElementById("photoConforme");
 
-  // Conforme avec photo
   if (fileInput && fileInput.files && fileInput.files.length > 0) {
     const reader = new FileReader();
     reader.onload = function () {
@@ -92,7 +101,6 @@ function conforme() {
     };
     reader.readAsDataURL(fileInput.files[0]);
   } else {
-    // Conforme sans photo
     ajouterReponse("Conforme", "", "");
   }
 }
@@ -104,9 +112,6 @@ function nonConforme() {
   if (photoConforme) photoConforme.value = "";
 
   document.getElementById("nonConformeBloc").style.display = "block";
-
-  // Activer bouton valider NC si tu en as un (optionnel)
-  // document.getElementById("btnValiderNC").disabled = false;
 }
 
 function validerNonConforme() {
@@ -124,7 +129,6 @@ function validerNonConforme() {
   reader.onload = function () {
     ajouterReponse("Non conforme", commentaire, reader.result);
 
-    // Reset champs NC
     document.getElementById("nonConformeBloc").style.display = "none";
     document.getElementById("commentaire").value = "";
     document.getElementById("photo").value = "";
@@ -162,11 +166,19 @@ function retour() {
 function nouvelleInspection() {
   if (!confirm("Démarrer une nouvelle inspection ?")) return;
 
+  // On crée une nouvelle inspection (on conserve les anciennes dans le storage)
   inspectionId = "inspection_" + Date.now();
   localStorage.setItem("inspectionId", inspectionId);
 
   reponses = [];
   index = 0;
+
+  // ✅ Reset du nom de sous-station pour cette nouvelle inspection
+  nomSousStation = "";
+  const champNom = document.getElementById("nomSousStation");
+  if (champNom) champNom.value = "";
+  localStorage.removeItem(inspectionId + "_nom");
+
   sauvegarder();
   afficherPoint();
 }
@@ -178,12 +190,16 @@ function sauvegarder() {
 async function genererPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-
   let y = 10;
 
   doc.setFontSize(16);
   doc.text("Rapport de contrôle – Sous-station", 10, y);
   y += 10;
+
+  // ✅ Sous-station contrôlée
+  doc.setFontSize(12);
+  doc.text("Sous‑station : " + (nomSousStation || "Non renseignée"), 10, y);
+  y += 8;
 
   doc.setFontSize(10);
   doc.text("Date : " + new Date().toLocaleDateString(), 10, y);

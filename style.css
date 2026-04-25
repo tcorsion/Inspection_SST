@@ -1,76 +1,95 @@
-/* Base globale */
+/* =========================
+   BASE MOBILE
+   ========================= */
 * {
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 body {
   margin: 0;
-  padding: 16px;
-  background-color: #f5f7fa;
-  color: #222;
+  padding: 18px;
+  background-color: #f4f6f9;
+  color: #111;
 }
 
-/* Titres */
+/* =========================
+   TITRES
+   ========================= */
 h1 {
-  font-size: 22px;
+  font-size: 26px;          /* PLUS GRAND */
   text-align: center;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 h2 {
-  font-size: 16px;
+  font-size: 20px;          /* PLUS GRAND */
+  font-weight: 600;
   color: #0b3c5d;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
-/* Progression */
+/* =========================
+   PROGRESSION
+   ========================= */
 #progression {
-  font-size: 14px;
+  font-size: 16px;          /* PLUS GRAND */
   text-align: center;
-  margin-bottom: 6px;
-  color: #555;
+  margin-bottom: 8px;
+  color: #444;
 }
 
 progress {
   width: 100%;
-  height: 16px;
-}
-
-/* Intitulé */
-#intitule {
-  font-size: 18px;
-  font-weight: 500;
-  background: white;
-  padding: 14px;
+  height: 20px;             /* PLUS ÉPAIS */
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
-/* Photos */
+/* =========================
+   INTITULÉ DU POINT
+   ========================= */
+#intitule {
+  font-size: 22px;          /* TRÈS LISIBLE */
+  font-weight: 500;
+  line-height: 1.4;
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+/* =========================
+   INPUT PHOTO
+   ========================= */
 input[type="file"] {
-  font-size: 15px;
-  margin: 6px 0 16px 0;
+  font-size: 17px;          /* PLUS GRAND */
+  margin: 10px 0 18px 0;
 }
 
-/* Boutons */
+/* =========================
+   BOUTONS (TRÈS IMPORTANT)
+   ========================= */
 button {
   width: 100%;
-  padding: 14px;
-  margin: 8px 0;
-  font-size: 17px;
+  padding: 18px;            /* PLUS HAUT */
+  margin: 10px 0;
+  font-size: 19px;          /* PLUS GRAND */
   font-weight: bold;
-  border-radius: 12px;
+  border-radius: 16px;
   border: none;
   cursor: pointer;
 }
 
 button:disabled {
-  opacity: 0.4;
+  opacity: 0.45;
 }
 
-/* Couleurs métier */
+/* =========================
+   COULEURS MÉTIER
+   ========================= */
 #btnConforme {
   background-color: #2e7d32;
   color: white;
@@ -83,6 +102,7 @@ button:disabled {
 
 #btnRetour {
   background-color: #e0e0e0;
+  color: #000;
 }
 
 #btnPdf {
@@ -90,19 +110,27 @@ button:disabled {
   color: white;
 }
 
-/* Bloc non conforme */
+/* =========================
+   BLOC NON CONFORME
+   ========================= */
 #nonConformeBloc {
   display: none;
-  background: #fff3f3;
+  background: #fff1f1;
   border-left: 6px solid #c62828;
-  padding: 14px;
-  border-radius: 10px;
-  margin-top: 16px;
+  padding: 18px;
+  border-radius: 14px;
+  margin-top: 20px;
+}
+
+#nonConformeBloc label {
+  font-size: 18px;
+  font-weight: 600;
 }
 
 #nonConformeBloc textarea {
   width: 100%;
-  padding: 10px;
-  font-size: 15px;
-  margin: 6px 0 12px 0;
+  font-size: 18px;
+  padding: 12px;
+  margin: 10px 0 16px 0;
+  border-radius: 10px;
 }

@@ -16,12 +16,12 @@
 
   <h1>Contrôle checklist ELM</h1>
   <!-- Nom de la sous-station -->
-  <div style="margin-bottom: 20px;">
-    <label for="nomSousStation">Sous‑station contrôlée</label>
+  <div id="ligneSousStation">
+    <label for="nomSousStation">Sous‑station : </label>
     <input
       type="text"
       id="nomSousStation"
-      placeholder="Ex : SS Poste Nord / SS-HTA-03"
+      placeholder="Ex : SS Poste Nord"
     >
   </div>
 
@@ -62,18 +62,19 @@
 
   <!-- Boutons actions -->
   <button id="btnRetour" onclick="retour()">⬅️ Précédent</button>
-  <button id="btnConforme" onclick="conforme()">✅ Conforme</button>
-  <button id="btnNonConforme" onclick="nonConforme()">❌ Non conforme</button>
-  <button id="btnNouvelleInspection" onclick="nouvelleInspection()">
-  🆕 Nouvelle inspection
-  </button>
+
+  <!-- Boutons Conforme / Non conforme -->
+  <div id="blocDecision">
+    <button id="btnConforme" onclick="conforme()">✅<br>Conforme</button>
+    <button id="btnNonConforme" onclick="nonConforme()">❌<br>Non conforme</button>
+  </div>
 
   <button id="btnPdf" onclick="genererPDF()" disabled>
     📄 Générer le rapport PDF
   </button>
 
-  <button onclick="nouvelleInspection()">
-    🆕 Nouvelle inspection
+  <button id="btnNouvelleInspection" onclick="nouvelleInspection()">
+  🆕 Nouvelle inspection
   </button>
 
   <!-- Bloc NON CONFORME -->
@@ -94,9 +95,11 @@
 
   <!-- Librairie PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
   <!-- Script application -->
   <script src="app.js"></script>
+  
 
 </body>
 </html>

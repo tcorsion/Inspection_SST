@@ -237,68 +237,135 @@ function sauvegarder() {
 
 async function genererPDF() {
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  let y = 10;
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
 
+  const pageWidth = doc.internal.pageSize.getWidth();
+  let y = 15;
+
+  /* =========================
+     EN‑TÊTE
+     ========================= */
   doc.setFontSize(16);
-  doc.text("Rapport de contrôle – Sous-station", 10, y);
-  y += 10;
-
-  // ✅ Sous-station contrôlée
-  doc.setFontSize(12);
-  doc.text("Sous‑station : " + (nomSousStation || "Non renseignée"), 10, y);
+  doc.setFont(undefined, "bold");
+  doc.text(
+    "RAPPORT DE CONTRÔLE – SOUS‑STATION",
+    pageWidth / 2,
+    y,
+    { align: "center" }
+  );
   y += 8;
 
-  doc.setFontSize(10);
-  doc.text("Date : " + new Date().toLocaleDateString(), 10, y);
-  y += 10;
+  doc.setFontSize(11);
+  doc.setFont(undefined, "normal");
+  doc.text(`Sous‑station : ${nomSousStation || "Non renseignée"}`, 15, y);
+  y += 6;
 
-  // ✅ Remarques générales (si présentes)
+  doc.text(`Date : ${new Date().toLocaleDateString()}`, 15, y);
+  y += 8;
+
+  /* =========================
+     REMARQUES GÉNÉRALES
+     ========================= */
   if (remarquesGenerales) {
-    doc.setFontSize(11);
-    doc.text("Remarques générales :", 10, y);
+    doc.setFont(undefined, "bold");
+    doc.text("Remarques générales :", 15, y);
     y += 6;
 
-    doc.setFontSize(10);
-    const lignes = doc.splitTextToSize(remarquesGenerales, 180);
-    doc.text(lignes, 10, y);
-    y += lignes.length * 5 + 4;
+    doc.setFont(undefined, "normal");
+    const lignes = doc.splitTextToSize(remarquesGenerales, pageWidth - 30);
+    doc.text(lignes, 15, y);
+    y += lignes.length * 5 + 6;
   }
 
+  /* =========================
+     TABLEAU DES POINTS
+     ========================= */
+  const rows = [];
+
   for (const rep of reponses) {
-    if (y > 260) {
+    rows.push([
+      rep.intitule || "",
+      rep.statut,
+      rep.photo ? "Oui" : "Non",
+      rep.commentaire || ""
+    ]);
+  }
+
+  doc.autoTable({
+    startY: y,
+    head: [[
+      "Point vérifié",
+      "Statut",
+      "Photo",
+      "Remarque"
+    ]],
+    body: rows,
+
+    styles: {
+      fontSize: 9,
+      cellPadding: 3,
+      valign: "top"
+    },
+
+    headStyles: {
+      fillColor: [11, 60, 93], // bleu foncé
+      textColor: 255,
+      fontStyle: "bold"
+    },
+
+    columnStyles: {
+      0: { cellWidth: 65 }, // Point vérifié
+      1: { cellWidth: 25 }, // Statut
+      2: { cellWidth: 20 }, // Photo
+      3: { cellWidth: "auto" } // Remarque
+    },
+
+    didDrawPage: function (data) {
+      // Pied de page
+      const pageCount = doc.getNumberOfPages();
+      doc.setFontSize(9);
+      doc.text(
+        `Page ${data.pageNumber} / ${pageCount}`,
+        pageWidth / 2,
+        doc.internal.pageSize.getHeight() - 10,
+        { align: "center" }
+      );
+    }
+  });
+
+  /* =========================
+     PHOTOS EN ANNEXE
+     ========================= */
+  doc.addPage();
+  y = 15;
+
+  doc.setFontSize(14);
+  doc.setFont(undefined, "bold");
+  doc.text("Annexe – Photos", 15, y);
+  y += 10;
+
+  for (const rep of reponses) {
+    if (!rep.photo) continue;
+
+    if (y > 220) {
       doc.addPage();
-      y = 10;
+      y = 15;
     }
 
     doc.setFontSize(11);
-    doc.text(`${rep.categorie}`, 10, y);
-    y += 5;
+    doc.setFont(undefined, "bold");
+    doc.text(rep.intitule, 15, y);
+    y += 6;
 
-    doc.setFontSize(10);
-    doc.text(`- ${rep.intitule}`, 10, y);
-    y += 5;
-
-    doc.text(`Statut : ${rep.statut}`, 10, y);
-    y += 5;
-
-    if (rep.commentaire) {
-      doc.text(`Commentaire : ${rep.commentaire}`, 10, y);
-      y += 5;
+    try {
+      doc.addImage(rep.photo, "JPEG", 15, y, 80, 60);
+      y += 70;
+    } catch {
+      doc.text("Photo non affichable", 15, y);
+      y += 10;
     }
-
-    if (rep.photo) {
-      try {
-        doc.addImage(rep.photo, "JPEG", 10, y, 60, 45);
-        y += 50;
-      } catch (e) {
-        doc.text("Photo non affichable", 10, y);
-        y += 5;
-      }
-    }
-
-    y += 5;
   }
 
-  doc.save("rapport_sous_station.pdf");
+  doc.save("rapport_controle_sous_station.pdf");
 }
+

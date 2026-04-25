@@ -181,3 +181,71 @@ button:disabled {
   line-height: 1.4;
   margin: 0;
 }
+
+/* ===============================
+   BLOC DÉCISION (2 boutons)
+   =============================== */
+#blocDecision {
+  display: flex;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+/* Boutons carrés */
+#blocDecision button {
+  flex: 1;
+  height: 120px;          /* ✅ carré tactile */
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 18px;
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Conforme */
+#btnConforme {
+  background-color: #2e7d32;
+  color: white;
+}
+
+/* Non conforme */
+#btnNonConforme {
+  background-color: #c62828;
+  color: white;
+}
+
+/* Désactivé */
+#blocDecision button:disabled {
+  opacity: 0.4;
+}
+
+/* ===============================
+   LIGNE SOUS-STATION
+   =============================== */
+#ligneSousStation {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+/* Libellé */
+#ligneSousStation label {
+  font-size: 22px;
+  font-weight: 700;
+  white-space: nowrap; /* empêche le retour à la ligne */
+}
+
+/* Champ */
+#nomSousStation {
+  flex: 1;
+  font-size: 22px;
+  padding: 5px;
+  border-radius: 14px;
+  border: 2px solid #ccc;
+}

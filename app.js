@@ -233,19 +233,32 @@ async function genererPDF() {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
 
   const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+
+  // ---------- Helpers ----------
+  function imageFormatFromDataUrl(dataUrl) {
+    if (!dataUrl || typeof dataUrl !== "string") return null;
+    const m = dataUrl.match(/^data:image\/(png|jpeg|jpg|webp);/i);
+    if (!m) return null;
+    const ext = m[1].toLowerCase();
+    if (ext === "png") return "PNG";
+    if (ext === "jpg" || ext === "jpeg") return "JPEG";
+    if (ext === "webp") return "WEBP";
+    return null;
+  }
+
+  // “contain” : tient dans maxW/maxH sans déformer
+  function fitContain(imgW, imgH, maxW, maxH) {
+    const ratio = Math.min(maxW / imgW, maxH / imgH);
+    return { w: imgW * ratio, h: imgH * ratio };
+  }
+
+  // ---------- EN-TÊTE ----------
   let y = 15;
 
-  /* =========================
-     EN‑TÊTE
-     ========================= */
   doc.setFontSize(16);
   doc.setFont(undefined, "bold");
-  doc.text(
-    "RAPPORT DE CONTRÔLE – SOUS‑STATION",
-    pageWidth / 2,
-    y,
-    { align: "center" }
-  );
+  doc.text("RAPPORT DE CONTRÔLE – SOUS-STATION", pageWidth / 2, y, { align: "center" }); // centrage fiable [3](https://www.npmjs.com/package/jspdf-autotable?activeTab=versions)
   y += 8;
 
   doc.setFontSize(11);
@@ -256,10 +269,7 @@ async function genererPDF() {
   doc.text(`Date : ${new Date().toLocaleDateString()}`, 15, y);
   y += 8;
 
-  /* =========================
-     REMARQUES GÉNÉRALES
-     ========================= */
-  if (remarquesGenerales) {
+  if (typeof remarquesGenerales !== "undefined" && remarquesGenerales) {
     doc.setFont(undefined, "bold");
     doc.text("Remarques générales :", 15, y);
     y += 6;
@@ -270,94 +280,111 @@ async function genererPDF() {
     y += lignes.length * 5 + 6;
   }
 
-  /* =========================
-     TABLEAU DES POINTS
-     ========================= */
-  const rows = [];
+  // ---------- DONNÉES TABLEAU ----------
+  const body = reponses.map(r => ({
+    point: r.intitule || "",
+    statut: r.statut || "",
+    photo: r.photo || "",      // DataURL ou ""
+    remarque: r.commentaire || ""
+  }));
 
-  for (const rep of reponses) {
-    rows.push([
-      rep.intitule || "",
-      rep.statut,
-      rep.photo ? "Oui" : "Non",
-      rep.commentaire || ""
-    ]);
-  }
+  // Réglages vignette
+  const THUMB_PAD = 1.2;      // marge interne
+  const MIN_PHOTO_ROW_H = 22; // hauteur mini de ligne si photo (mm)
 
+  // ---------- TABLEAU ----------
   doc.autoTable({
     startY: y,
-    head: [[
-      "Point vérifié",
-      "Statut",
-      "Photo",
-      "Remarque"
-    ]],
-    body: rows,
+    head: [[ "Point vérifié", "Statut", "Photo", "Remarque" ]],
+    body,
+    columns: [
+      { header: "Point vérifié", dataKey: "point" },
+      { header: "Statut", dataKey: "statut" },
+      { header: "Photo", dataKey: "photo" },
+      { header: "Remarque", dataKey: "remarque" }
+    ], // structure recommandée pour styler/repérer les colonnes [5](https://deepwiki.com/simonbengtsson/jsPDF-AutoTable/2.4-themes-and-styling)
 
     styles: {
       fontSize: 9,
-      cellPadding: 3,
-      valign: "top"
+      cellPadding: 2,
+      valign: "top",
+      overflow: "linebreak"
     },
 
     headStyles: {
-      fillColor: [11, 60, 93], // bleu foncé
+      fillColor: [11, 60, 93],
       textColor: 255,
       fontStyle: "bold"
     },
 
     columnStyles: {
-      0: { cellWidth: 65 }, // Point vérifié
-      1: { cellWidth: 25 }, // Statut
-      2: { cellWidth: 20 }, // Photo
-      3: { cellWidth: "auto" } // Remarque
+      point:    { cellWidth: 75 },
+      statut:   { cellWidth: 22 },
+      photo:    { cellWidth: 30 },     // un peu plus large = meilleur rendu
+      remarque: { cellWidth: "auto" }
     },
 
+    didParseCell: function (data) {
+      if (data.section === "body" && data.column.dataKey === "photo") {
+        // ✅ Empêche AutoTable d'imprimer la DataURL en texte
+        data.cell.text = "";
+
+        const imgData = data.cell.raw;
+        data.cell.styles.minCellHeight = imgData ? MIN_PHOTO_ROW_H : 10;
+      }
+    },
+
+    // 2) Dessiner la photo dans la cellule (adaptation automatique)
+    didDrawCell: function (data) {
+      if (data.section === "body" && data.column.dataKey === "photo") {
+        const imgData = data.cell.raw;
+
+        // Pas de photo
+        if (!imgData) {
+          doc.setFontSize(9);
+          doc.text("—", data.cell.x + data.cell.width / 2, data.cell.y + data.cell.height / 2, { align: "center" });
+          return;
+        }
+
+        // Format image (évite “invisible” si PNG et on force JPEG) [2](https://www.xjavascript.com/blog/is-there-any-way-to-center-text-with-jspdf/)[4](https://stackoverflow.com/questions/35063330/how-to-align-text-in-center-using-jspdf)
+        const fmt = imageFormatFromDataUrl(imgData) || "JPEG";
+
+        // Dimensions image si possible
+        let imgW = 100, imgH = 100;
+        try {
+          const props = doc.getImageProperties(imgData);
+          imgW = props.width;
+          imgH = props.height;
+        } catch (e) {
+          // fallback
+        }
+
+        // Zone dispo dans cellule
+        const maxW = data.cell.width - THUMB_PAD * 2;
+        const maxH = data.cell.height - THUMB_PAD * 2;
+
+        // “contain” : tient dans la cellule sans déformer
+        const fitted = fitContain(imgW, imgH, maxW, maxH);
+
+        // Centrer dans la cellule
+        const xImg = data.cell.x + (data.cell.width - fitted.w) / 2;
+        const yImg = data.cell.y + (data.cell.height - fitted.h) / 2;
+
+        try {
+          doc.addImage(imgData, fmt, xImg, yImg, fitted.w, fitted.h); // insertion image [2](https://www.xjavascript.com/blog/is-there-any-way-to-center-text-with-jspdf/)
+        } catch (e) {
+          doc.setFontSize(8);
+          doc.text("Image\nillisible", data.cell.x + data.cell.width / 2, data.cell.y + data.cell.height / 2, { align: "center" });
+        }
+      }
+    }, // didDrawCell = bon hook pour dessiner dans la cellule [1](https://onedrive.live.com/?id=423b5603-b30c-20d0-80ae-cd3000000000&cid=aed0b30c423b5603&web=1)
+
+    // Pagination (simple)
     didDrawPage: function (data) {
-      // Pied de page
-      const pageCount = doc.getNumberOfPages();
       doc.setFontSize(9);
-      doc.text(
-        `Page ${data.pageNumber} / ${pageCount}`,
-        pageWidth / 2,
-        doc.internal.pageSize.getHeight() - 10,
-        { align: "center" }
-      );
+      doc.text(`Page ${data.pageNumber}`, pageWidth / 2, pageHeight - 10, { align: "center" });
     }
   });
-
-  /* =========================
-     PHOTOS EN ANNEXE
-     ========================= */
-  doc.addPage();
-  y = 15;
-
-  doc.setFontSize(14);
-  doc.setFont(undefined, "bold");
-  doc.text("Annexe – Photos", 15, y);
-  y += 10;
-
-  for (const rep of reponses) {
-    if (!rep.photo) continue;
-
-    if (y > 220) {
-      doc.addPage();
-      y = 15;
-    }
-
-    doc.setFontSize(11);
-    doc.setFont(undefined, "bold");
-    doc.text(rep.intitule, 15, y);
-    y += 6;
-
-    try {
-      doc.addImage(rep.photo, "JPEG", 15, y, 80, 60);
-      y += 70;
-    } catch {
-      doc.text("Photo non affichable", 15, y);
-      y += 10;
-    }
-  }
 
   doc.save("rapport_controle_sous_station.pdf");
 }

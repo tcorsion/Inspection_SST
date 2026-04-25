@@ -52,14 +52,16 @@ progress {
    INTITULÉ DU POINT
    =============================== */
 #intitule {
-  font-size: 26px;   /* ✅ PLUS BESOIN DE ZOOM */
+  font-size: 26px;
   font-weight: 600;
   line-height: 1.4;
-  background: #ffffff;
-  padding: 22px;
-  border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
-  margin-bottom: 28px;
+  margin: 0;
+
+  /* ❌ on enlève tout ce qui crée un cadre */
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
 }
 
 /* ===============================
@@ -156,4 +158,26 @@ button:disabled {
   resize: vertical;
   margin-top: 8px;
 }
-``
+
+/* ===============================
+   BLOC QUESTION (FIXE)
+   =============================== */
+#blocPoint {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  padding: 20px;
+  margin-bottom: 24px;
+
+  /* 👉 TAILLE FIXE */
+  height: 160px;          /* ajuste si besoin */
+  overflow-y: auto;       /* scroll interne */
+}
+
+/* Texte du point */
+#intitule {
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0;
+}

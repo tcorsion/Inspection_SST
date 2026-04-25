@@ -156,10 +156,16 @@ function conforme() {
 function nonConforme() {
   if (index >= points.length) return;
 
+  // Réinitialiser la photo conforme
   const photoConforme = document.getElementById("photoConforme");
   if (photoConforme) photoConforme.value = "";
 
+  // Afficher le bloc NC
   document.getElementById("nonConformeBloc").style.display = "block";
+
+  // ✅ ACTIVER le bouton Valider
+  const btnValider = document.getElementById("btnValiderNonConforme");
+  if (btnValider) btnValider.disabled = false;
 }
 
 function validerNonConforme() {
@@ -184,6 +190,7 @@ function validerNonConforme() {
     const photoConforme = document.getElementById("photoConforme");
     if (photoConforme) photoConforme.value = "";
   };
+
   reader.readAsDataURL(fileInput.files[0]);
 }
 

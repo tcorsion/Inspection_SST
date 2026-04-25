@@ -46,10 +46,25 @@
     >
   </div>
 
+  <!-- Remarques générales -->
+  <div style="margin-bottom: 24px;">
+    <label for="remarquesGenerales">
+      Remarques générales
+    </label>
+    <textarea
+      id="remarquesGenerales"
+      rows="4"
+      placeholder="Observations, contexte, contraintes, remarques globales…"
+    ></textarea>
+  </div>
+
   <!-- Boutons actions -->
   <button id="btnRetour" onclick="retour()">⬅️ Précédent</button>
   <button id="btnConforme" onclick="conforme()">✅ Conforme</button>
   <button id="btnNonConforme" onclick="nonConforme()">❌ Non conforme</button>
+  <button id="btnNouvelleInspection" onclick="nouvelleInspection()">
+  🆕 Nouvelle inspection
+  </button>
 
   <button id="btnPdf" onclick="genererPDF()" disabled>
     📄 Générer le rapport PDF

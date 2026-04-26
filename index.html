@@ -2,7 +2,10 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
   <title>Inspection terrain</title>
 
   <!-- CSS -->
@@ -14,77 +17,111 @@
 
 <body>
 
-  <h1>Contrôle checklist ELM</h1>
-  <!-- Nom de la sous-station -->
-  <div id="ligneSousStation">
-    <label for="nomSousStation">Sous‑station : </label>
-    <input
-      type="text"
-      id="nomSousStation"
-      placeholder="Ex : SS Poste Nord"
+  <!-- ===============================
+       VUE CONTRÔLE
+       =============================== -->
+  <div id="vueControle">
+
+    <h1>Contrôle checklist ELM</h1>
+
+    <!-- Nom de la sous-station -->
+    <div id="ligneSousStation">
+      <label for="nomSousStation">Sous‑station :</label>
+      <input
+        type="text"
+        id="nomSousStation"
+        placeholder="Ex : SS Poste Nord"
+      >
+    </div>
+
+    <!-- Progression -->
+    <div id="progression"></div>
+    <progress id="progressBar" value="0" max="100"></progress>
+
+    <!-- Catégorie -->
+    <h2 id="categorie"></h2>
+
+    <!-- Bloc question -->
+    <div id="blocPoint">
+      <p id="intitule">Chargement…</p>
+    </div>
+
+    <!-- Zone Observation -->
+    <div id="zoneObservation">
+      <label id="labelCommentaire">Commentaire</label>
+      <textarea
+        id="commentaire"
+        rows="4"
+        placeholder="Observations, remarques…"
+      ></textarea>
+
+      <label id="labelPhoto">Photo</label>
+      <input
+        type="file"
+        id="photo"
+        accept="image/*,.heic,.heif,image/heic,image/heif"
+        capture="environment"
+      >
+    </div>
+
+    <!-- Décision -->
+    <div id="blocDecision">
+      <button id="btnConforme" onclick="conforme()">✅<br>Conforme</button>
+      <button id="btnNonConforme" onclick="nonConforme()">❌<br>Non conforme</button>
+    </div>
+
+    <button
+      id="btnValiderNonConforme"
+      onclick="validerNonConforme()"
+      disabled
     >
+      Valider et continuer
+    </button>
+
+    <button id="btnRetour" onclick="retour()">⬅️ Précédent</button>
+
+    <button id="btnPdf" onclick="genererPDF()" disabled>
+      📄 Générer le rapport PDF
+    </button>
+
+    <button id="btnNouvelleInspection" onclick="nouvelleInspection()">
+      🆕 Nouvelle inspection
+    </button>
+
   </div>
 
-  <!-- Progression -->
-  <div id="progression"></div>
-  <progress id="progressBar" value="0" max="100"></progress>
+  <!-- ===============================
+       VUE ARCHIVES
+       =============================== -->
+  <div id="vueArchives" style="display:none;"></div>
 
-  <!-- Catégorie -->
-  <h2 id="categorie"></h2>
+  <!-- ===============================
+       MENU LATÉRAL
+       =============================== -->
+  <button id="btnMenu">☰</button>
 
-  <!-- Bloc question -->
-  <div id="blocPoint">
-    <p id="intitule">Chargement…</p>
-  </div>
+  <nav id="menuLateral">
+    <h3>Menu</h3>
+    <ul>
+      <li data-view="controle">🧪 Contrôle</li>
+      <li data-view="archives">🗂 Archives</li>
+    </ul>
+  </nav>
 
-<!-- Zone Commentaire / Photo -->
-<div id="zoneObservation">
-  <label id="labelCommentaire">Commentaire</label>
-  <textarea id="commentaire" rows="4"
-    placeholder="Observations, remarques…"></textarea>
+  <div id="overlay"></div>
 
-  <label id="labelPhoto">Photo</label>
-  <input
-    type="file"
-    id="photo"
-    accept="image/*"
-    capture="environment"
-  >
-</div>
-
-<!-- Boutons Conforme / Non conforme -->
-<div id="blocDecision">
-  <button id="btnConforme" onclick="conforme()">✅<br>Conforme</button>
-  <button id="btnNonConforme" onclick="nonConforme()">❌<br>Non conforme</button>
-</div>
-
-<!-- Validation Non conforme -->
-<button
-  id="btnValiderNonConforme"
-  onclick="validerNonConforme()"
-  disabled
->
-  Valider et continuer
-</button>
-
-<!-- Navigation -->
-<button id="btnRetour" onclick="retour()">⬅️ Précédent</button>
-
-  <button id="btnPdf" onclick="genererPDF()" disabled>
-    📄 Générer le rapport PDF
-  </button>
-
-  <button id="btnNouvelleInspection" onclick="nouvelleInspection()">
-  🆕 Nouvelle inspection
-  </button>
-
-  <!-- Librairie PDF -->
+  <!-- ===============================
+       LIBRAIRIES
+       =============================== -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/heic2any/dist/heic2any.min.js"></script>
 
-  <!-- Script application -->
+  <!-- ===============================
+       SCRIPTS APPLICATION
+       =============================== -->
   <script src="app.js"></script>
-  
+  <script src="archives.js"></script>
 
 </body>
 </html>

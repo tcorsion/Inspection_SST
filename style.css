@@ -313,3 +313,142 @@ button:disabled {
   border-color: #c62828;
   background-color: #fffafa;
 }
+
+/* ===============================
+   BOUTON MENU (hamburger)
+   =============================== */
+#btnMenu {
+  position: fixed;
+  top: 28px;        /* ✅ bouton plus bas */
+  left: 12px;
+
+  width: 56px;
+  height: 56px;
+
+  padding: 0;
+  margin: 0;
+
+  font-size: 28px;
+  font-weight: 700;
+
+  border-radius: 14px;
+  background-color: #0b3c5d;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 2000;
+}
+
+/* Menu */
+#menuLateral {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 260px;
+  height: 100%;
+  background: #1e293b;
+  color: white;
+  padding: 20px;
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+/* Titre du menu */
+#menuLateral h3 {
+  margin-top: 100px;    /* ⬅️ descend le titre */
+  margin-bottom: 24px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+#menuLateral.open {
+  left: 0;
+}
+
+#menuLateral ul {
+  list-style: none;
+  padding: 0;
+}
+
+#menuLateral li {
+  padding: 14px 10px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Overlay */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  z-index: 999;
+}
+
+#overlay.show {
+  display: block;
+}
+
+/* ===============================
+   ARCHIVES – MOBILE TERRAIN
+   =============================== */
+
+#vueArchives {
+  padding: 16px;
+}
+
+.archive-station {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+
+.archive-station h3 {
+  margin: 0 0 12px 0;
+  font-size: 22px;
+  color: #0b3c5d;
+}
+
+.archive-rapport {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.archive-rapport a {
+  color: #0b3c5d;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.archive-photos {
+  margin-top: 10px;
+  padding-left: 12px;
+  border-left: 4px solid #0b3c5d;
+}
+
+.archive-photos > div:first-child {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.archive-photo {
+  font-size: 18px;
+  padding: 8px 0;
+}
+
+.archive-photo a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+}
+
+.archive-photo a:active {
+  color: #0b3c5d;
+}
+

@@ -1,6 +1,7 @@
 let reponses = [];
 let points = [];
 let index = 0;
+
 let nomSousStation = "";
 let remarquesGenerales = "";
 
@@ -12,11 +13,8 @@ if (!inspectionId) {
 }
 
 function afficherVue(vue) {
-  document.getElementById("vueControle").style.display =
-    vue === "controle" ? "block" : "none";
-
-  document.getElementById("vueArchives").style.display =
-    vue === "archives" ? "block" : "none";
+  document.getElementById("vueControle").style.display = (vue === "controle") ? "block" : "none";
+  document.getElementById("vueArchives").style.display = (vue === "archives") ? "block" : "none";
 
   if (vue === "archives" && typeof afficherArchives === "function") {
     afficherArchives();
@@ -25,21 +23,14 @@ function afficherVue(vue) {
 
 document.addEventListener("DOMContentLoaded", () => {
   // ==========================
-  // MENU (UN SEUL endroit)
+  // MENU (UN SEUL ENDROIT)
   // ==========================
   const menu = document.getElementById("menuLateral");
   const overlay = document.getElementById("overlay");
   const btnMenu = document.getElementById("btnMenu");
 
-  if (btnMenu) btnMenu.onclick = () => {
-    menu.classList.add("open");
-    overlay.classList.add("show");
-  };
-
-  if (overlay) overlay.onclick = () => {
-    menu.classList.remove("open");
-    overlay.classList.remove("show");
-  };
+  btnMenu.onclick = () => { menu.classList.add("open"); overlay.classList.add("show"); };
+  overlay.onclick = () => { menu.classList.remove("open"); overlay.classList.remove("show"); };
 
   document.querySelectorAll("#menuLateral li").forEach(li => {
     li.onclick = () => {
@@ -53,18 +44,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // SOUS-STATION
   // ==========================
   const champNom = document.getElementById("nomSousStation");
-  if (champNom) {
-    const nomSauvegarde = localStorage.getItem(inspectionId + "_nom");
-    if (nomSauvegarde) {
-      nomSousStation = nomSauvegarde;
-      champNom.value = nomSousStation;
-    }
-
-    champNom.addEventListener("input", () => {
-      nomSousStation = champNom.value.trim();
-      localStorage.setItem(inspectionId + "_nom", nomSousStation);
-    });
+  const nomSauvegarde = localStorage.getItem(inspectionId + "_nom");
+  if (nomSauvegarde) {
+    nomSousStation = nomSauvegarde;
+    champNom.value = nomSousStation;
   }
+  champNom.addEventListener("input", () => {
+    nomSousStation = champNom.value.trim();
+    localStorage.setItem(inspectionId + "_nom", nomSousStation);
+  });
 
   // ==========================
   // REMARQUES (si champ présent)
@@ -83,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================
-  // CHARGEMENT CHECKLIST
+  // CHARGEMENT CHECKLIST (UNE SEULE FOIS)
   // ==========================
   fetch("checklist.json")
     .then(res => {
@@ -108,72 +96,45 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function afficherPoint() {
-  // ✅ Désactiver uniquement les boutons de la vue contrôle (sans toucher au menu)
-  document.querySelectorAll("#vueControle button").forEach(b => {
-    // On ne touche pas au bouton menu s’il est dans vueControle (au cas où)
-    if (b.id === "btnMenu") return;
-    b.disabled = true;
-    b.style.display = "block";
-  });
-
-  // Toujours forcer le bouton menu actif si présent
-  const btnMenu = document.getElementById("btnMenu");
-  if (btnMenu) btnMenu.disabled = false;
-
-  // Reset état non conforme
-  const zoneObs = document.getElementById("zoneObservation");
-  if (zoneObs) zoneObs.classList.remove("obligatoire");
-
-  const btnValiderNC = document.getElementById("btnValiderNonConforme");
-  if (btnValiderNC) btnValiderNC.disabled = true;
-
-  const commentaireEl = document.getElementById("commentaire");
-  const photoEl = document.getElementById("photo");
-  if (commentaireEl) commentaireEl.value = "";
-  if (photoEl) photoEl.value = "";
-
-  const btnRetour = document.getElementById("btnRetour");
-  if (btnRetour) btnRetour.disabled = (index === 0);
+  // Reset visuel
+  document.getElementById("zoneObservation").classList.remove("obligatoire");
+  document.getElementById("commentaire").value = "";
+  document.getElementById("btnValiderNonConforme").disabled = true;
 
   if (index < points.length) {
     document.getElementById("categorie").textContent = points[index].categorie || "";
     document.getElementById("intitule").textContent = points[index].intitule || "";
 
-    const prog = document.getElementById("progression");
-    if (prog) prog.textContent = `Point ${index + 1} / ${points.length}`;
+    document.getElementById("progression").textContent = `Point ${index + 1} / ${points.length}`;
+    document.getElementById("progressBar").value = ((index + 1) / points.length) * 100;
 
-    const bar = document.getElementById("progressBar");
-    if (bar) bar.value = ((index + 1) / points.length) * 100;
-
-    // ✅ Boutons actifs pendant l’inspection
     document.getElementById("btnConforme").disabled = false;
     document.getElementById("btnNonConforme").disabled = false;
     document.getElementById("btnRetour").disabled = (index === 0);
   } else {
     document.getElementById("categorie").textContent = "";
     document.getElementById("intitule").textContent = "Inspection terminée ✅";
+    document.getElementById("progression").textContent = "Inspection terminée";
+    document.getElementById("progressBar").value = 100;
 
-    const prog = document.getElementById("progression");
-    if (prog) prog.textContent = "Inspection terminée";
-
-    const bar = document.getElementById("progressBar");
-    if (bar) bar.value = 100;
-
-    // Masquer boutons décision/retour
     document.getElementById("btnConforme").style.display = "none";
     document.getElementById("btnNonConforme").style.display = "none";
     document.getElementById("btnRetour").style.display = "none";
     document.getElementById("btnValiderNonConforme").style.display = "none";
 
-    // ✅ Actions autorisées à la fin
     document.getElementById("btnPdf").disabled = false;
     document.getElementById("btnNouvelleInspection").disabled = false;
   }
 }
 
+function bloquerActions(bloque) {
+  document.getElementById("btnConforme").disabled = bloque;
+  document.getElementById("btnNonConforme").disabled = bloque;
+  document.getElementById("btnValiderNonConforme").disabled = bloque;
+}
+
 function nonConforme() {
   if (index >= points.length) return;
-
   document.getElementById("zoneObservation").classList.add("obligatoire");
   document.getElementById("btnValiderNonConforme").disabled = false;
 }
@@ -181,51 +142,69 @@ function nonConforme() {
 async function conforme() {
   if (index >= points.length) return;
 
-  const photoEl = document.getElementById("photo");
-  let dataUrl = "";
+  bloquerActions(true);
 
-  if (photoEl && photoEl.files && photoEl.files.length > 0) {
-    dataUrl = await fileToDataUrlWithHeicSupport(photoEl.files[0]);
+  try {
+    const commentaireEl = document.getElementById("commentaire");
+    const photoEl = document.getElementById("photo");
+
+    const commentaire = (commentaireEl.value || "").trim();
+    let dataUrl = "";
+
+    if (photoEl && photoEl.files && photoEl.files.length > 0) {
+      // ✅ On prend directement la version JPEG réduite
+      dataUrl = await resizeImageToDataURL(photoEl.files[0]);
+
+      if (!dataUrl.startsWith("data:image/jpeg")) {
+        throw new Error("Format photo non supporté");
+      }
+    }
+
+    ajouterReponse("Conforme", commentaire, dataUrl);
+
+    commentaireEl.value = "";
+    if (photoEl) photoEl.value = "";
+
+  } catch (err) {
+    console.error("Erreur traitement photo Conforme", err);
+    alert(err.message || "Erreur lors du traitement de la photo");
+  } finally {
+    bloquerActions(false);
   }
-
-  ajouterReponse("Conforme", "", dataUrl);
-
-  document.getElementById("zoneObservation").classList.remove("obligatoire");
-  document.getElementById("commentaire").value = "";
-  if (photoEl) photoEl.value = "";
-  document.getElementById("btnValiderNonConforme").disabled = true;
 }
 
-async function validerNonConforme() {
+async function conforme() {
   if (index >= points.length) return;
 
-  const commentaireEl = document.getElementById("commentaire");
-  const photoEl = document.getElementById("photo");
+  bloquerActions(true);
 
-  const commentaire = (commentaireEl.value || "").trim();
-  if (!commentaire) {
-    alert("Commentaire obligatoire");
-    return;
+  try {
+    const commentaireEl = document.getElementById("commentaire");
+    const photoEl = document.getElementById("photo");
+
+    const commentaire = (commentaireEl.value || "").trim();
+    let dataUrl = "";
+
+    if (photoEl && photoEl.files && photoEl.files.length > 0) {
+      // ✅ On prend directement la version JPEG réduite
+      dataUrl = await resizeImageToDataURL(photoEl.files[0]);
+
+      if (!dataUrl.startsWith("data:image/jpeg")) {
+        throw new Error("Format photo non supporté");
+      }
+    }
+
+    ajouterReponse("Conforme", commentaire, dataUrl);
+
+    commentaireEl.value = "";
+    if (photoEl) photoEl.value = "";
+
+  } catch (err) {
+    console.error("Erreur traitement photo Conforme", err);
+    alert(err.message || "Erreur lors du traitement de la photo");
+  } finally {
+    bloquerActions(false);
   }
-
-  if (!photoEl || !photoEl.files || photoEl.files.length === 0) {
-    alert("Photo obligatoire");
-    return;
-  }
-
-  const dataUrl = await fileToDataUrlWithHeicSupport(photoEl.files[0]);
-
-  // ✅ Ajout de la réponse → index++ et passage au point suivant
-  ajouterReponse("Non conforme", commentaire, dataUrl);
-
-  // ✅ Reset UI
-  document
-    .getElementById("zoneObservation")
-    .classList.remove("obligatoire");
-
-  commentaireEl.value = "";
-  photoEl.value = "";
-  document.getElementById("btnValiderNonConforme").disabled = true;
 }
 
 function ajouterReponse(statut, commentaire, photo) {
@@ -240,12 +219,12 @@ function ajouterReponse(statut, commentaire, photo) {
 
   sauvegarder();
   index++;
+  console.log("✅ Index après ajout =", index);
   afficherPoint();
 }
 
 function retour() {
   if (index === 0) return;
-
   index--;
   reponses.pop();
   sauvegarder();
@@ -255,17 +234,14 @@ function retour() {
 function nouvelleInspection() {
   if (!confirm("Démarrer une nouvelle inspection ?")) return;
 
-  // On crée une nouvelle inspection (on conserve les anciennes dans le storage)
   inspectionId = "inspection_" + Date.now();
   localStorage.setItem("inspectionId", inspectionId);
 
   reponses = [];
   index = 0;
 
-  // ✅ Reset du nom de sous-station pour cette nouvelle inspection
   nomSousStation = "";
-  const champNom = document.getElementById("nomSousStation");
-  if (champNom) champNom.value = "";
+  document.getElementById("nomSousStation").value = "";
   localStorage.removeItem(inspectionId + "_nom");
 
   sauvegarder();
@@ -273,7 +249,80 @@ function nouvelleInspection() {
 }
 
 function sauvegarder() {
-  localStorage.setItem(inspectionId, JSON.stringify(reponses));
+  try {
+    localStorage.setItem(inspectionId, JSON.stringify(reponses));
+  } catch (e) {
+    // QuotaExceededError (Edge/Chrome)
+    alert("Stockage plein (trop de photos). Génère le PDF puis démarre une nouvelle inspection.");
+    console.error(e);
+  }
+}
+
+async function resizeImageToDataURL(file, maxWidth = 1024) {
+  const img = document.createElement("img");
+  const dataUrl = await fileToDataUrlWithHeicSupport(file);
+
+  return new Promise(resolve => {
+    img.onload = () => {
+      const ratio = maxWidth / img.width;
+      const canvas = document.createElement("canvas");
+      canvas.width = maxWidth;
+      canvas.height = img.height * ratio;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      resolve(canvas.toDataURL("image/jpeg", 0.5));
+    };
+    img.src = dataUrl;
+  });
+}
+
+// Redimensionne + compresse en JPEG (utile pour éviter les fichiers énormes)
+// - maxWidth : largeur maxi (1024 recommandé)
+// - quality : qualité JPEG (0.55 à 0.7 selon besoin)
+async function resizeImageToDataURL(file, maxWidth = 1024, quality = 0.55) {
+  const img = new Image();
+
+  // Lire le fichier en DataURL
+  const dataUrl = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+  // Charger l'image
+  await new Promise((resolve, reject) => {
+    img.onload = resolve;
+    img.onerror = () => reject(new Error("Impossible de lire l'image"));
+    img.src = dataUrl;
+  });
+
+  // Sécurité dimensions
+  if (!img.width || !img.height) {
+    throw new Error("Image invalide");
+  }
+
+  // Calcul des dimensions finales
+  const ratio = Math.min(1, maxWidth / img.width);
+  const w = Math.round(img.width * ratio);
+  const h = Math.round(img.height * ratio);
+
+  // Canvas
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    throw new Error("Canvas non supporté");
+  }
+
+  // ✅ APPEL CORRECT : 5 arguments
+  ctx.drawImage(img, 0, 0, w, h);
+
+  return canvas.toDataURL("image/jpeg", quality);
 }
 
 async function genererPDF() {
@@ -459,55 +508,6 @@ async function genererPDF() {
   sauvegarderArchive(archive);
 
 }
-
-async function fileToDataUrlWithHeicSupport(file) {
-  const isHeic =
-    (file.type && file.type.toLowerCase().includes("heic")) ||
-    (file.name && file.name.toLowerCase().endsWith(".heic")) ||
-    (file.type && file.type.toLowerCase().includes("heif")) ||
-    (file.name && file.name.toLowerCase().endsWith(".heif"));
-
-  let blobToRead = file;
-
-  if (isHeic && window.heic2any) {
-    blobToRead = await heic2any({
-      blob: file,
-      toType: "image/jpeg",
-      quality: 0.85
-    });
-  }
-
-  return await new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(blobToRead);
-  });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const menu = document.getElementById("menuLateral");
-  const overlay = document.getElementById("overlay");
-  const btnMenu = document.getElementById("btnMenu");
-
-  if (btnMenu) btnMenu.onclick = () => {
-    menu.classList.add("open");
-    overlay.classList.add("show");
-  };
-
-  if (overlay) overlay.onclick = () => {
-    menu.classList.remove("open");
-    overlay.classList.remove("show");
-  };
-
-  document.querySelectorAll("#menuLateral li").forEach(li => {
-    li.onclick = () => {
-      afficherVue(li.dataset.view);
-      menu.classList.remove("open");
-      overlay.classList.remove("show");
-    };
-  });
-});
 
 const overlay = document.getElementById("overlay");
 

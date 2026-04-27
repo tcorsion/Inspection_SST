@@ -66,25 +66,42 @@
 
     <!-- Décision -->
     <div id="blocDecision">
-      <button id="btnConforme" onclick="conforme()">✅<br>Conforme</button>
-      <button id="btnNonConforme" onclick="nonConforme()">❌<br>Non conforme</button>
+        <button id="btnConforme"
+                type="button"
+              onclick="conforme()">
+        ✅<br>Conforme
+        </button>
+
+      <button id="btnNonConforme"
+              type="button"
+              onclick="nonConforme()">
+        ❌<br>Non conforme
+      </button>
     </div>
 
-    <button
-      id="btnValiderNonConforme"
-      onclick="validerNonConforme()"
-      disabled
-    >
+    <button id="btnValiderNonConforme"
+            type="button"
+            onclick="validerNonConforme()"
+            disabled>
       Valider et continuer
     </button>
 
-    <button id="btnRetour" onclick="retour()">⬅️ Précédent</button>
+    <button id="btnRetour"
+            type="button"
+            onclick="retour()">
+      ⬅️ Précédent
+    </button>
 
-    <button id="btnPdf" onclick="genererPDF()" disabled>
+    <button id="btnPdf"
+            type="button"
+            onclick="genererPDF()"
+            disabled>
       📄 Générer le rapport PDF
     </button>
 
-    <button id="btnNouvelleInspection" onclick="nouvelleInspection()">
+    <button id="btnNouvelleInspection"
+            type="button"
+            onclick="nouvelleInspection()">
       🆕 Nouvelle inspection
     </button>
 
@@ -95,10 +112,10 @@
        =============================== -->
   <div id="vueArchives" style="display:none;"></div>
 
-  <!-- ===============================
-       MENU LATÉRAL
-       =============================== -->
-  <button id="btnMenu">☰</button>
+  <button id="btnMenu"
+        type="button">
+    ☰
+  </button>
 
   <nav id="menuLateral">
     <h3>Menu</h3>

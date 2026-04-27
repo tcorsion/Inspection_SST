@@ -203,38 +203,29 @@ async function validerNonConforme() {
   const photoEl = document.getElementById("photo");
 
   const commentaire = (commentaireEl.value || "").trim();
-  if (!commentaire) return alert("Commentaire obligatoire");
-  if (!photoEl.files || photoEl.files.length === 0) return alert("Photo obligatoire");
-
-  const dataUrl = await fileToDataUrlWithHeicSupport(photoEl.files[0]);
-  ajouterReponse("Non conforme", commentaire, dataUrl);
-
-  document.getElementById("zoneObservation").classList.remove("obligatoire");
-  commentaireEl.value = "";
-  photoEl.value = "";
-  document.getElementById("btnValiderNonConforme").disabled = true;
-}
-
-function validerNonConforme() {
-  const commentaire = document.getElementById("commentaire").value.trim();
-  const fileInput = document.getElementById("photo");
-
-  if (commentaire === "" || fileInput.files.length === 0) {
-    alert("Commentaire et photo obligatoires");
+  if (!commentaire) {
+    alert("Commentaire obligatoire");
     return;
   }
 
-  const reader = new FileReader();
-  reader.onload = function () {
-    ajouterReponse("Non conforme", commentaire, reader.result);
+  if (!photoEl || !photoEl.files || photoEl.files.length === 0) {
+    alert("Photo obligatoire");
+    return;
+  }
 
-    document.getElementById("zoneObservation").classList.remove("obligatoire");
-    document.getElementById("commentaire").value = "";
-    document.getElementById("photo").value = "";
-    document.getElementById("btnValiderNonConforme").disabled = true;
-  };
+  const dataUrl = await fileToDataUrlWithHeicSupport(photoEl.files[0]);
 
-  reader.readAsDataURL(fileInput.files[0]);
+  // ✅ Ajout de la réponse → index++ et passage au point suivant
+  ajouterReponse("Non conforme", commentaire, dataUrl);
+
+  // ✅ Reset UI
+  document
+    .getElementById("zoneObservation")
+    .classList.remove("obligatoire");
+
+  commentaireEl.value = "";
+  photoEl.value = "";
+  document.getElementById("btnValiderNonConforme").disabled = true;
 }
 
 function ajouterReponse(statut, commentaire, photo) {

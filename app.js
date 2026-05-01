@@ -4,6 +4,7 @@ let index = 0;
 
 let nomSousStation = "";
 let remarquesGenerales = "";
+let enModeNonConforme = false;
 
 // ✅ Multi-inspections : ID persistant
 let inspectionId = localStorage.getItem("inspectionId");
@@ -96,10 +97,19 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function afficherPoint() {
-  // Reset visuel
   document.getElementById("zoneObservation").classList.remove("obligatoire");
   document.getElementById("commentaire").value = "";
   document.getElementById("btnValiderNonConforme").disabled = true;
+
+  // ✅ TRÈS IMPORTANT : réafficher les boutons
+  document.getElementById("btnConforme").style.display = "inline-block";
+  document.getElementById("btnNonConforme").style.display = "inline-block";
+  document.getElementById("btnRetour").style.display = "inline-block";
+  document.getElementById("btnValiderNonConforme").style.display = "inline-block";
+
+  enModeNonConforme = false;
+  document.getElementById("btnConforme").disabled = false;
+  document.getElementById("btnNonConforme").disabled = false;
 
   if (index < points.length) {
     document.getElementById("categorie").textContent = points[index].categorie || "";
@@ -135,12 +145,21 @@ function bloquerActions(bloque) {
 
 function nonConforme() {
   if (index >= points.length) return;
+
+  enModeNonConforme = true;
+
+  // Visuel obligatoire + bouton Valider activé
   document.getElementById("zoneObservation").classList.add("obligatoire");
   document.getElementById("btnValiderNonConforme").disabled = false;
+
+  // Empêche d’enregistrer "Conforme" tant qu’on n’a pas validé le NC
+  document.getElementById("btnConforme").disabled = true;
+  document.getElementById("btnNonConforme").disabled = true;
 }
 
-async function conforme() {
+async function validerNonConforme() {
   if (index >= points.length) return;
+  if (!enModeNonConforme) return;
 
   bloquerActions(true);
 
@@ -149,27 +168,38 @@ async function conforme() {
     const photoEl = document.getElementById("photo");
 
     const commentaire = (commentaireEl.value || "").trim();
+    if (!commentaire) {
+      alert("⚠️ Commentaire obligatoire pour un point NON CONFORME.");
+      return;
+    }
+
     let dataUrl = "";
-
     if (photoEl && photoEl.files && photoEl.files.length > 0) {
-      // ✅ On prend directement la version JPEG réduite
       dataUrl = await resizeImageToDataURL(photoEl.files[0]);
-
       if (!dataUrl.startsWith("data:image/jpeg")) {
         throw new Error("Format photo non supporté");
       }
     }
 
-    ajouterReponse("Conforme", commentaire, dataUrl);
+    ajouterReponse("Non conforme", commentaire, dataUrl);
 
+    // Reset
+    enModeNonConforme = false;
     commentaireEl.value = "";
     if (photoEl) photoEl.value = "";
+    document.getElementById("zoneObservation").classList.remove("obligatoire");
 
   } catch (err) {
-    console.error("Erreur traitement photo Conforme", err);
+    console.error("Erreur traitement photo Non conforme", err);
     alert(err.message || "Erreur lors du traitement de la photo");
   } finally {
     bloquerActions(false);
+    // Réactive les boutons pour le prochain point (si pas fini)
+    if (index < points.length) {
+      document.getElementById("btnConforme").disabled = false;
+      document.getElementById("btnNonConforme").disabled = false;
+      document.getElementById("btnValiderNonConforme").disabled = true;
+    }
   }
 }
 
@@ -535,12 +565,35 @@ function sauvegarderArchive(archive) {
   localStorage.setItem("archives", JSON.stringify(archives));
 }
 
+function sauvegarderArchivesArray(archives) {
+  localStorage.setItem("archives", JSON.stringify(archives));
+}
+
+function supprimerArchiveParId(archiveId) {
+  const archives = JSON.parse(localStorage.getItem("archives") || "[]");
+  const restants = archives.filter(a => a.id !== archiveId);
+  sauvegarderArchivesArray(restants);
+  afficherArchives();
+}
+
+function supprimerTousRapportsSousStation(sousStation) {
+  const archives = JSON.parse(localStorage.getItem("archives") || "[]");
+  const restants = archives.filter(a => a.sousStation !== sousStation);
+  sauvegarderArchivesArray(restants);
+  afficherArchives();
+}
+
 function afficherArchives() {
   const container = document.getElementById("vueArchives");
   container.innerHTML = "<h2>Archives</h2>";
 
   const archives = JSON.parse(localStorage.getItem("archives") || "[]");
+  if (!archives.length) {
+    container.innerHTML += "<p>Aucune archive enregistrée.</p>";
+    return;
+  }
 
+  // Groupe par sous-station
   const groupes = {};
   archives.forEach(a => {
     if (!groupes[a.sousStation]) groupes[a.sousStation] = [];
@@ -549,22 +602,189 @@ function afficherArchives() {
 
   for (const station in groupes) {
     const div = document.createElement("div");
-    div.innerHTML = `<h3>📁 ${station}</h3>`;
+    div.style.border = "1px solid #ddd";
+    div.style.borderRadius = "10px";
+    div.style.padding = "10px";
+    div.style.marginBottom = "12px";
+
+    // Bouton suppression "dossier" (= tous les rapports de la sous-station)
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+        <h3 style="margin:0;">📁 ${station}</h3>
+        <button type="button" style="background:#ffe5e5;border:1px solid #ff9b9b;padding:6px 10px;border-radius:8px;cursor:pointer;"
+                data-action="delete-station" data-station="${station}">
+          🗑️ Supprimer dossier
+        </button>
+      </div>
+    `;
 
     groupes[station].forEach(a => {
-      div.innerHTML += `
-        <div>
-          📄 <a href="${a.pdf.dataUrl}" target="_blank">${a.pdf.name}</a>
-          <div style="margin-left:20px;">
-            📁 ${a.photos.folder}
-            ${a.photos.files.map(p =>
-              `<div>📷 <a href="${p.dataUrl}" target="_blank">${p.name}</a></div>`
-            ).join("")}
+      const bloc = document.createElement("div");
+      bloc.style.marginTop = "10px";
+      bloc.style.padding = "10px";
+      bloc.style.borderTop = "1px dashed #ccc";
+
+      const pdfName = a.pdf?.name || "rapport.pdf";
+      const pdfDataUrl = a.pdf?.dataUrl || "";
+
+      // photos
+      const photos = (a.photos?.files || []).map((p, i) => {
+        const photoName = p.name || `photo_${i+1}.jpg`;
+        const photoDataUrl = p.dataUrl || "";
+        return `
+          <div style="margin-left:12px;margin-top:6px;">
+            📷 ${photoName}
+            <button type="button" data-action="open-photo" data-id="${a.id}" data-photoname="${photoName}" data-photodata="1" data-index="${i}">
+              Ouvrir
+            </button>
+            <button type="button" data-action="dl-photo" data-id="${a.id}" data-photoname="${photoName}" data-photodata="1" data-index="${i}">
+              Télécharger
+            </button>
           </div>
+        `;
+      }).join("");
+
+      bloc.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+          <div>
+            <div><b>Date :</b> ${a.date || "—"}</div>
+            <div style="margin-top:6px;">
+              📄 <b>${pdfName}</b>
+              <button type="button" data-action="open-pdf" data-id="${a.id}">Ouvrir</button>
+              <button type="button" data-action="dl-pdf" data-id="${a.id}">Télécharger</button>
+            </div>
+            <div style="margin-top:6px;">
+              <b>Photos :</b> ${a.photos?.folder || "—"}
+              ${photos || "<div style='margin-left:12px;'>Aucune photo</div>"}
+            </div>
+          </div>
+
+          <button type="button"
+                  style="background:#fff3cd;border:1px solid #e6c35c;padding:6px 10px;border-radius:8px;cursor:pointer; height:fit-content;"
+                  data-action="delete-one" data-id="${a.id}">
+            🗑️ Supprimer rapport
+          </button>
         </div>
       `;
+
+      div.appendChild(bloc);
     });
 
     container.appendChild(div);
   }
+
+  // ✅ Event delegation (un seul écouteur)
+  container.onclick = (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+
+    const action = btn.dataset.action;
+
+    if (action === "delete-one") {
+      const id = btn.dataset.id;
+      if (confirm("Supprimer ce rapport ?")) supprimerArchiveParId(id);
+      return;
+    }
+
+    if (action === "delete-station") {
+      const station = btn.dataset.station;
+      if (confirm(`Supprimer tous les rapports de "${station}" ?`)) {
+        supprimerTousRapportsSousStation(station);
+      }
+      return;
+    }
+
+    // Récupère l'archive correspondante
+    const archives = JSON.parse(localStorage.getItem("archives") || "[]");
+    const id = btn.dataset.id;
+    const archive = archives.find(a => a.id === id);
+    if (!archive) return alert("Archive introuvable.");
+
+    if (action === "open-pdf" || action === "dl-pdf") {
+      const mode = action === "dl-pdf" ? "download" : "open";
+      ouvrirOuTelechargerDataUrl(archive.pdf?.dataUrl, archive.pdf?.name || "rapport.pdf", mode);
+      return;
+    }
+
+    if (action === "open-photo" || action === "dl-photo") {
+      const i = Number(btn.dataset.index);
+      const file = archive.photos?.files?.[i];
+      if (!file) return alert("Photo introuvable.");
+
+      const mode = action === "dl-photo" ? "download" : "open";
+      ouvrirOuTelechargerDataUrl(file.dataUrl, file.name || "photo.jpg", mode);
+      return;
+    }
+    if (action === "dl-photos") {
+      const id = btn.dataset.id;
+      const archives = JSON.parse(localStorage.getItem("archives") || "[]");
+      const archive = archives.find(a => a.id === id);
+      if (!archive) return alert("Archive introuvable.");
+      telechargerPhotosArchive(archive);
+      return;
+    }
+  };
+}
+
+function dataUrlToBlob(dataUrl) {
+  const [meta, base64] = dataUrl.split(",");
+  const mime = (meta.match(/data:(.*?);base64/) || [])[1] || "application/octet-stream";
+  const bin = atob(base64);
+  const len = bin.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) bytes[i] = bin.charCodeAt(i);
+  return new Blob([bytes], { type: mime });
+}
+
+function ouvrirOuTelechargerDataUrl(dataUrl, filename, mode = "open") {
+  if (!dataUrl || typeof dataUrl !== "string" || !dataUrl.startsWith("data:")) {
+    alert("Fichier indisponible (données manquantes ou corrompues).");
+    return;
+  }
+
+  const blob = dataUrlToBlob(dataUrl);
+  const url = URL.createObjectURL(blob);
+
+  if (mode === "download") {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename || "fichier";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  } else {
+    // ouverture dans un nouvel onglet (blob: mieux supporté que data:)
+    window.open(url, "_blank");
+  }
+
+  // libère la mémoire
+  setTimeout(() => URL.revokeObjectURL(url), 30_000);
+}
+
+async function telechargerPhotosArchive(archive) {
+  if (!archive.photos || !archive.photos.files || !archive.photos.files.length) {
+    alert("Aucune photo à télécharger pour ce rapport.");
+    return;
+  }
+
+  const zip = new JSZip();
+  const folderName = archive.photos.folder || "photos";
+  const folder = zip.folder(folderName);
+
+  archive.photos.files.forEach(p => {
+    const blob = dataUrlToBlob(p.dataUrl);
+    folder.file(p.name || "photo.jpg", blob);
+  });
+
+  const contenuZip = await zip.generateAsync({ type: "blob" });
+
+  const url = URL.createObjectURL(contenuZip);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `photos_${archive.sousStation}_${archive.date}.zip`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  URL.revokeObjectURL(url);
 }

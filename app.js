@@ -585,15 +585,15 @@ function supprimerTousRapportsSousStation(sousStation) {
 
 function afficherArchives() {
   const container = document.getElementById("vueArchives");
-  container.innerHTML = "<h2>Archives</h2>";
+  container.innerHTML = "<h2>🗂 Archives</h2>";
 
   const archives = JSON.parse(localStorage.getItem("archives") || "[]");
   if (!archives.length) {
-    container.innerHTML += "<p>Aucune archive enregistrée.</p>";
+    container.innerHTML += "<p>Aucune archive.</p>";
     return;
   }
 
-  // Groupe par sous-station
+  // Groupement par sous-station
   const groupes = {};
   archives.forEach(a => {
     if (!groupes[a.sousStation]) groupes[a.sousStation] = [];
@@ -601,127 +601,75 @@ function afficherArchives() {
   });
 
   for (const station in groupes) {
-    const div = document.createElement("div");
-    div.style.border = "1px solid #ddd";
-    div.style.borderRadius = "10px";
-    div.style.padding = "10px";
-    div.style.marginBottom = "12px";
+    const bloc = document.createElement("div");
+    bloc.style.marginBottom = "14px";
 
-    // Bouton suppression "dossier" (= tous les rapports de la sous-station)
-    div.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
-        <h3 style="margin:0;">📁 ${station}</h3>
-        <button type="button" style="background:#ffe5e5;border:1px solid #ff9b9b;padding:6px 10px;border-radius:8px;cursor:pointer;"
-                data-action="delete-station" data-station="${station}">
-          🗑️ Supprimer dossier
-        </button>
-      </div>
-    `;
+    bloc.innerHTML = `<h3>📁 ${station}</h3>`;
 
     groupes[station].forEach(a => {
-      const bloc = document.createElement("div");
-      bloc.style.marginTop = "10px";
-      bloc.style.padding = "10px";
-      bloc.style.borderTop = "1px dashed #ccc";
+      bloc.innerHTML += `
+        <div style="
+          display:flex;
+          align-items:center;
+          gap:14px;
+          padding:6px 4px;
+          border-bottom:1px solid #ddd;
+          font-size:15px;">
+          
+          <span style="flex:1;">📄 ${a.date}</span>
 
-      const pdfName = a.pdf?.name || "rapport.pdf";
-      const pdfDataUrl = a.pdf?.dataUrl || "";
+          <span title="Ouvrir le rapport"
+                data-action="open-pdf"
+                data-id="${a.id}"
+                style="cursor:pointer;">👁️</span>
 
-      // photos
-      const photos = (a.photos?.files || []).map((p, i) => {
-        const photoName = p.name || `photo_${i+1}.jpg`;
-        const photoDataUrl = p.dataUrl || "";
-        return `
-          <div style="margin-left:12px;margin-top:6px;">
-            📷 ${photoName}
-            <button type="button" data-action="open-photo" data-id="${a.id}" data-photoname="${photoName}" data-photodata="1" data-index="${i}">
-              Ouvrir
-            </button>
-            <button type="button" data-action="dl-photo" data-id="${a.id}" data-photoname="${photoName}" data-photodata="1" data-index="${i}">
-              Télécharger
-            </button>
-          </div>
-        `;
-      }).join("");
+          <span title="Télécharger le rapport"
+                data-action="dl-pdf"
+                data-id="${a.id}"
+                style="cursor:pointer;">⬇️</span>
 
-      bloc.innerHTML = `
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
-          <div>
-            <div><b>Date :</b> ${a.date || "—"}</div>
-            <div style="margin-top:6px;">
-              📄 <b>${pdfName}</b>
-              <button type="button" data-action="open-pdf" data-id="${a.id}">Ouvrir</button>
-              <button type="button" data-action="dl-pdf" data-id="${a.id}">Télécharger</button>
-            </div>
-            <div style="margin-top:6px;">
-              <b>Photos :</b> ${a.photos?.folder || "—"}
-              ${photos || "<div style='margin-left:12px;'>Aucune photo</div>"}
-            </div>
-          </div>
+          <span title="Télécharger toutes les photos"
+                data-action="dl-photos"
+                data-id="${a.id}"
+                style="cursor:pointer;">📦</span>
 
-          <button type="button"
-                  style="background:#fff3cd;border:1px solid #e6c35c;padding:6px 10px;border-radius:8px;cursor:pointer; height:fit-content;"
-                  data-action="delete-one" data-id="${a.id}">
-            🗑️ Supprimer rapport
-          </button>
+          <span title="Supprimer le rapport"
+                data-action="delete-report"
+                data-id="${a.id}"
+                style="cursor:pointer;">🗑️</span>
         </div>
       `;
-
-      div.appendChild(bloc);
     });
 
-    container.appendChild(div);
+    container.appendChild(bloc);
   }
 
-  // ✅ Event delegation (un seul écouteur)
   container.onclick = (e) => {
-    const btn = e.target.closest("button");
-    if (!btn) return;
+    const el = e.target;
+    const action = el.dataset.action;
+    if (!action) return;
 
-    const action = btn.dataset.action;
-
-    if (action === "delete-one") {
-      const id = btn.dataset.id;
-      if (confirm("Supprimer ce rapport ?")) supprimerArchiveParId(id);
-      return;
-    }
-
-    if (action === "delete-station") {
-      const station = btn.dataset.station;
-      if (confirm(`Supprimer tous les rapports de "${station}" ?`)) {
-        supprimerTousRapportsSousStation(station);
-      }
-      return;
-    }
-
-    // Récupère l'archive correspondante
+    const id = el.dataset.id;
     const archives = JSON.parse(localStorage.getItem("archives") || "[]");
-    const id = btn.dataset.id;
     const archive = archives.find(a => a.id === id);
     if (!archive) return alert("Archive introuvable.");
 
-    if (action === "open-pdf" || action === "dl-pdf") {
-      const mode = action === "dl-pdf" ? "download" : "open";
-      ouvrirOuTelechargerDataUrl(archive.pdf?.dataUrl, archive.pdf?.name || "rapport.pdf", mode);
-      return;
+    if (action === "open-pdf") {
+      ouvrirOuTelechargerDataUrl(archive.pdf.dataUrl, archive.pdf.name, "open");
     }
 
-    if (action === "open-photo" || action === "dl-photo") {
-      const i = Number(btn.dataset.index);
-      const file = archive.photos?.files?.[i];
-      if (!file) return alert("Photo introuvable.");
-
-      const mode = action === "dl-photo" ? "download" : "open";
-      ouvrirOuTelechargerDataUrl(file.dataUrl, file.name || "photo.jpg", mode);
-      return;
+    if (action === "dl-pdf") {
+      ouvrirOuTelechargerDataUrl(archive.pdf.dataUrl, archive.pdf.name, "download");
     }
+
     if (action === "dl-photos") {
-      const id = btn.dataset.id;
-      const archives = JSON.parse(localStorage.getItem("archives") || "[]");
-      const archive = archives.find(a => a.id === id);
-      if (!archive) return alert("Archive introuvable.");
       telechargerPhotosArchive(archive);
-      return;
+    }
+
+    if (action === "delete-report") {
+      if (confirm("Supprimer ce rapport ?")) {
+        supprimerArchiveParId(id);
+      }
     }
   };
 }
@@ -762,29 +710,25 @@ function ouvrirOuTelechargerDataUrl(dataUrl, filename, mode = "open") {
 }
 
 async function telechargerPhotosArchive(archive) {
-  if (!archive.photos || !archive.photos.files || !archive.photos.files.length) {
-    alert("Aucune photo à télécharger pour ce rapport.");
+  if (!archive.photos?.files?.length) {
+    alert("Aucune photo dans ce rapport.");
     return;
   }
 
   const zip = new JSZip();
-  const folderName = archive.photos.folder || "photos";
-  const folder = zip.folder(folderName);
+  const folder = zip.folder(archive.photos.folder || "photos");
 
   archive.photos.files.forEach(p => {
-    const blob = dataUrlToBlob(p.dataUrl);
-    folder.file(p.name || "photo.jpg", blob);
+    folder.file(p.name, dataUrlToBlob(p.dataUrl));
   });
 
-  const contenuZip = await zip.generateAsync({ type: "blob" });
+  const blob = await zip.generateAsync({ type: "blob" });
+  const url = URL.createObjectURL(blob);
 
-  const url = URL.createObjectURL(contenuZip);
   const a = document.createElement("a");
   a.href = url;
   a.download = `photos_${archive.sousStation}_${archive.date}.zip`;
-  document.body.appendChild(a);
   a.click();
-  a.remove();
 
   URL.revokeObjectURL(url);
 }

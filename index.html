@@ -2,144 +2,84 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  >
-  <title>Inspection terrain</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application d'Inspection - Sous-Stations</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Charger les bibliothèques externes (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <!-- Load the idb library first -->
+  <script src="https://cdn.jsdelivr.net/npm/idb@8/build/umd.js"></script>
+  <!-- Then load your application script -->
+  <script src="app.js"></script>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
 </head>
-
 <body>
+  <!-- Overlay pour le menu -->
+  <div id="overlay"></div>
 
-  <!-- ===============================
-       VUE CONTRÔLE
-       =============================== -->
-  <div id="vueControle">
-
-    <h1>Contrôle checklist ELM</h1>
-
-    <!-- Nom de la sous-station -->
-    <div id="ligneSousStation">
-      <label for="nomSousStation">Sous‑station :</label>
-      <input
-        type="text"
-        id="nomSousStation"
-        placeholder="Ex : SS Poste Nord"
-      >
-    </div>
-
-    <!-- Progression -->
-    <div id="progression"></div>
-    <progress id="progressBar" value="0" max="100"></progress>
-
-    <!-- Catégorie -->
-    <h2 id="categorie"></h2>
-
-    <!-- Bloc question -->
-    <div id="blocPoint">
-      <p id="intitule">Chargement…</p>
-    </div>
-
-    <!-- Zone Observation -->
-    <div id="zoneObservation">
-      <label id="labelCommentaire">Commentaire</label>
-      <textarea
-        id="commentaire"
-        rows="4"
-        placeholder="Observations, remarques…"
-      ></textarea>
-
-      <label id="labelPhoto">Photo</label>
-      <input
-        type="file"
-        id="photo"
-        accept="image/*,.heic,.heif,image/heic,image/heif"
-        capture="environment"
-      >
-    </div>
-
-    <!-- Décision -->
-    <div id="blocDecision">
-        <button id="btnConforme"
-                type="button"
-              onclick="conforme()">
-        ✅<br>Conforme
-        </button>
-
-      <button id="btnNonConforme"
-              type="button"
-              onclick="nonConforme()">
-        ❌<br>Non conforme
-      </button>
-    </div>
-
-    <button id="btnValiderNonConforme"
-            type="button"
-            onclick="validerNonConforme()"
-            disabled>
-      Valider et continuer
-    </button>
-
-    <button id="btnRetour"
-            type="button"
-            onclick="retour()">
-      ⬅️ Précédent
-    </button>
-
-    <button id="btnPdf"
-            type="button"
-            onclick="genererPDF()"
-            disabled>
-      📄 Générer le rapport PDF
-    </button>
-
-    <button id="btnNouvelleInspection"
-            type="button"
-            onclick="nouvelleInspection()">
-      🆕 Nouvelle inspection
-    </button>
-
-  </div>
-
-  <!-- ===============================
-       VUE ARCHIVES
-       =============================== -->
-  <div id="vueArchives" style="display:none;"></div>
-
-  <button id="btnMenu"
-        type="button">
-    ☰
-  </button>
-
+  <!-- Menu latéral -->
   <nav id="menuLateral">
-    <h3>Menu</h3>
     <ul>
-      <li data-view="controle">🧪 Contrôle</li>
+      <li data-view="controle">📋 Contrôle</li>
       <li data-view="archives">🗂 Archives</li>
     </ul>
   </nav>
 
-  <div id="overlay"></div>
+  <!-- Bouton pour ouvrir le menu -->
+  <button id="btnMenu" class="btn-menu">☰ Menu</button>
 
-  <!-- ===============================
-       LIBRAIRIES
-       =============================== -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/heic2any/dist/heic2any.min.js"></script>
+  <!-- Vue Contrôle -->
+  <div id="vueControle">
+    <h1>Inspection de Sous-Station</h1>
 
-  <!-- ===============================
-       SCRIPTS APPLICATION
-       =============================== -->
-  <script src="app.js"></script>
-  <script src="archives.js"></script>
+    <div class="form-group">
+      <label for="nomSousStation">Nom de la sous-station :</label>
+      <input type="text" id="nomSousStation" placeholder="Ex: Sous-station A">
+    </div>
+
+    <div class="form-group">
+      <label for="remarquesGenerales">Remarques générales :</label>
+      <textarea id="remarquesGenerales" rows="3" placeholder="Ajoutez des remarques générales ici..."></textarea>
+    </div>
+
+    <div id="progression-container">
+      <div id="progression">Point 1 / 0</div>
+      <progress id="progressBar" value="0" max="100"></progress>
+    </div>
+
+    <div id="point-container">
+      <h2 id="categorie">Catégorie</h2>
+      <h3 id="intitule">Intitulé du point de contrôle</h3>
+    </div>
+
+    <div id="zoneObservation">
+      <div class="form-group">
+        <label for="commentaire">Commentaire :</label>
+        <textarea id="commentaire" rows="3" placeholder="Ajoutez un commentaire si nécessaire..."></textarea>
+      </div>
+      <div class="form-group">
+        <label for="photo">Photo (optionnelle) :</label>
+        <input type="file" id="photo" accept="image/*" capture="environment">
+      </div>
+    </div>
+
+    <div id="boutons-container">
+      <button id="btnConforme" class="btn btn-vert">✅ Conforme</button>
+      <button id="btnNonConforme" class="btn btn-rouge">❌ Non conforme</button>
+      <button id="btnValiderNonConforme" class="btn btn-bleu" disabled>Valider Non Conforme</button>
+      <button id="btnRetour" class="btn btn-gris" disabled>← Retour</button>
+    </div>
+
+    <div id="boutons-fin">
+      <button id="btnPdf" class="btn btn-bleu" disabled>📄 Générer PDF</button>
+      <button id="btnNouvelleInspection" class="btn btn-vert" disabled>🆕 Nouvelle Inspection</button>
+    </div>
+  </div>
+
+  <!-- Vue Archives -->
+  <div id="vueArchives" style="display: none;"></div>
 
 </body>
 </html>

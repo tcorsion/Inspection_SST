@@ -117,21 +117,31 @@ body {
 }
 
 /* ============================================
-   STYLES POUR LES BOUTONS PRINCIPAUX
+   DISPOSITION DES BOUTONS
    ============================================ */
 
-/* Conteneur pour les boutons principaux */
+/* Conteneur pour les boutons principaux (sur la même ligne) */
 #boutons-principaux {
   display: flex;
-  gap: 10px;             /* Espacement réduit pour mobile */
+  gap: 10px;             /* Espacement entre les boutons */
   margin: 15px 0;
   justify-content: center;
-  flex-wrap: wrap;       /* Autorise le retour à la ligne si vraiment nécessaire */
+  flex-wrap: wrap;       /* Permet un retour à la ligne si nécessaire */
 }
 
-/* Style de base pour TOUS les boutons */
+/* Conteneur pour les boutons secondaires (en colonne) */
+#boutons-secondaires {
+  display: flex;
+  flex-direction: column; /* ⭐ Force l'affichage en colonne */
+  gap: 10px;             /* Espacement vertical entre les boutons */
+  margin: 10px 0;
+  align-items: center;   /* Centre les boutons horizontalement */
+  width: 100%;          /* Prend toute la largeur */
+}
+
+/* Style commun pour TOUS les boutons */
 .btn {
-  padding: 12px 15px;    /* Padding réduit */
+  padding: 15px 20px;
   border: none;
   border-radius: 8px;
   font-size: 16px;
@@ -139,20 +149,16 @@ body {
   transition: all 0.2s ease;
   text-align: center;
   font-weight: bold;
+  width: 100%;          /* ⭐ Largeur à 100% pour les boutons en colonne */
+  min-width: 140px;    /* Largeur minimale */
+  max-width: 300px;    /* Largeur maximale */
 }
 
-/* Style SPÉCIFIQUE pour Conforme et Non conforme */
-#btnConforme, #btnNonConforme {
-  min-width: 120px;      /* Largeur minimale réduite */
-  max-width: 150px;     /* Largeur maximale pour éviter qu'ils ne soient trop larges */
-  padding: 12px 10px;   /* Padding ajusté */
-  font-size: 16px;      /* Taille de police adaptée */
-}
-
-/* Style pour les autres boutons (Valider Non Conforme, Retour) */
-#btnValiderNonConforme, #btnRetour {
-  min-width: 140px;
-  padding: 12px 20px;
+/* Style spécifique pour les boutons principaux (même largeur) */
+#boutons-principaux .btn {
+  flex: 1;              /* ⭐ Partage l'espace équitablement */
+  width: auto;         /* ⭐ Annule width:100% pour ces boutons */
+  min-width: 140px;    /* Largeur minimale */
 }
 
 /* Couleurs des boutons */
@@ -176,27 +182,24 @@ body {
    ============================================ */
 @media (max-width: 600px) {
   #boutons-principaux {
-    gap: 8px;            /* Espacement encore plus réduit */
-    justify-content: center;
+    gap: 8px;            /* Espacement réduit */
   }
 
-  /* Réduire encore la taille des boutons Conforme/Non conforme sur mobile */
-  #btnConforme, #btnNonConforme {
-    min-width: 100px;    /* Largeur minimale réduite */
-    max-width: 200px;   /* Largeur maximale réduite */
-    padding: 40px 8px;  /* Padding encore plus réduit */
-    font-size: 14px;    /* Taille de police réduite */
+  /* Boutons principaux sur la même ligne */
+  #boutons-principaux .btn {
+    flex: 1;
+    min-width: 0;       /* Permet aux boutons de rétrécir */
   }
 
-  /* Boutons secondaires en colonne */
+  /* Boutons secondaires en colonne (déjà le cas par défaut) */
   #boutons-secondaires {
-    flex-direction: column;
-    align-items: center;
+    width: 100%;
   }
 
-  #btnValiderNonConforme, #btnRetour {
-    width: 100%;
-    margin-bottom: 8px;
+  /* Réduire légèrement la taille des boutons sur mobile */
+  .btn {
+    padding: 12px 15px;
+    font-size: 15px;
   }
 }
 

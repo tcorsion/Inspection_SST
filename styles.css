@@ -296,8 +296,8 @@ progress::-webkit-progress-value {
   border-radius: 8px;
   border: 1px solid #e0e0e0;
   overflow-y: auto;       /* Active le défilement vertical si nécessaire */
-  max-height: 120px;      /* Hauteur fixe maximale */
-  min-height: 120px;      /* Hauteur fixe minimale */
+  max-height: 200px;      /* Hauteur fixe maximale */
+  min-height: 200px;      /* Hauteur fixe minimale */
   width: 100%;           /* Prend toute la largeur disponible */
 }
 

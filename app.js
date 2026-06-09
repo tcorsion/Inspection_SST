@@ -428,16 +428,18 @@ async function genererPDF() {
   const allPhotos = await getAllFromDB('photos');
   const inspectionPhotos = allPhotos.filter(p => p.inspectionId === state.inspectionId);
 
-  // Créer un mapping photoId -> Blob
+  // Créer un mapping photoId -> DataURL (au lieu de Blob)
   const photoMap = {};
   for (const photo of inspectionPhotos) {
-    photoMap[photo.id] = photo.blob;
+    // Convertir le Blob en DataURL
+    const dataUrl = await blobToDataURL(photo.blob);
+    photoMap[photo.id] = dataUrl;
   }
 
   const body = state.reponses.map(r => ({
     point: r.intitule || "",
     statut: r.statut || "",
-    photo: r.photo ? photoMap[r.photo] : null,
+    photo: r.photo ? photoMap[r.photo] : null, // DataURL au lieu de Blob
     remarque: r.commentaire || ""
   }));
 
@@ -479,44 +481,44 @@ async function genererPDF() {
     },
     didDrawCell: function (data) {
       if (data.section === "body" && data.column.dataKey === "photo") {
-        const blob = data.cell.raw;
-        if (!blob) {
+        const dataUrl = data.cell.raw; // DataURL au lieu de Blob
+        if (!dataUrl) {
           doc.setFontSize(9);
           doc.text("—", data.cell.x + data.cell.width / 2, data.cell.y + data.cell.height / 2, { align: "center" });
           return;
         }
 
-        const reader = new FileReader();
-        reader.onload = () => {
-          const imgData = reader.result;
-          const fmt = imageFormatFromBlob(blob) || "JPEG";
+        const fmt = dataUrl.startsWith("data:image/webp") ? "WEBP" :
+                    dataUrl.startsWith("data:image/png") ? "PNG" :
+                    dataUrl.startsWith("data:image/jpeg") ? "JPEG" : "JPEG";
 
-          const padX = data.cell.padding("horizontal");
-          const padY = data.cell.padding("vertical");
-          const innerX = data.cell.x + padX;
-          const innerY = data.cell.y + padY;
-          const innerW = data.cell.width - padX * 2;
-          const innerH = data.cell.height - padY * 2;
+        const padX = data.cell.padding("horizontal");
+        const padY = data.cell.padding("vertical");
+        const innerX = data.cell.x + padX;
+        const innerY = data.cell.y + padY;
+        const innerW = data.cell.width - padX * 2;
+        const innerH = data.cell.height - padY * 2;
 
-          let imgW = 100, imgH = 100;
-          try {
-            const props = doc.getImageProperties(imgData);
-            imgW = props.width;
-            imgH = props.height;
-          } catch (e) {}
+        let imgW = 100, imgH = 100;
+        try {
+          const props = doc.getImageProperties(dataUrl);
+          imgW = props.width;
+          imgH = props.height;
+        } catch (e) {
+          console.error("Erreur lors de la lecture de l'image :", e);
+        }
 
-          const fitted = fitContain(imgW, imgH, innerW, innerH);
-          const xImg = innerX + (innerW - fitted.w) / 2;
-          const yImg = innerY + (innerH - fitted.h) / 2;
+        const fitted = fitContain(imgW, imgH, innerW, innerH);
+        const xImg = innerX + (innerW - fitted.w) / 2;
+        const yImg = innerY + (innerH - fitted.h) / 2;
 
-          try {
-            doc.addImage(imgData, fmt, xImg, yImg, fitted.w, fitted.h);
-          } catch (e) {
-            doc.setFontSize(8);
-            doc.text("Image\nillisible", data.cell.x + data.cell.width / 2, data.cell.y + data.cell.height / 2, { align: "center" });
-          }
-        };
-        reader.readAsDataURL(blob);
+        try {
+          doc.addImage(dataUrl, fmt, xImg, yImg, fitted.w, fitted.h);
+        } catch (e) {
+          console.error("Erreur lors de l'ajout de l'image au PDF :", e);
+          doc.setFontSize(8);
+          doc.text("Image\nillisible", data.cell.x + data.cell.width / 2, data.cell.y + data.cell.height / 2, { align: "center" });
+        }
       }
     },
     didDrawPage: function (data) {
@@ -570,6 +572,16 @@ async function genererPDF() {
   state.remarquesGenerales = "";
   document.getElementById("nomSousStation").value = "";
   afficherPoint();
+}
+
+// Fonction pour convertir un Blob en DataURL
+function blobToDataURL(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
 }
 
 // ============================================

@@ -283,3 +283,52 @@ progress::-webkit-progress-value {
     width: 100%;
   }
 }
+
+/* ============================================
+   ZONE DE TEXTE FIXE POUR LES POINTS
+   ============================================ */
+
+/* Conteneur pour les points de contrôle */
+#point-container {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  overflow-y: auto;       /* ⭐ Active le défilement vertical si nécessaire */
+  max-height: 120px;      /* ⭐ Hauteur fixe maximale */
+  min-height: 120px;      /* ⭐ Hauteur fixe minimale */
+}
+
+/* Style pour la catégorie et l'intitulé */
+#point-container h2 {
+  color: #1a1a2e;
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+#point-container h3 {
+  color: #555;
+  font-size: 16px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ============================================
+   ADAPTATION POUR MOBILE (optionnel)
+   ============================================ */
+@media (max-width: 600px) {
+  #point-container {
+    max-height: 100px;    /* Hauteur légèrement réduite sur mobile */
+    min-height: 100px;
+    padding: 12px;
+  }
+
+  #point-container h2 {
+    font-size: 16px;
+  }
+
+  #point-container h3 {
+    font-size: 14px;
+  }
+}

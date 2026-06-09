@@ -295,9 +295,10 @@ progress::-webkit-progress-value {
   background-color: #f9f9f9;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
-  overflow-y: auto;       /* ⭐ Active le défilement vertical si nécessaire */
-  max-height: 120px;      /* ⭐ Hauteur fixe maximale */
-  min-height: 120px;      /* ⭐ Hauteur fixe minimale */
+  overflow-y: auto;       /* Active le défilement vertical si nécessaire */
+  max-height: 120px;      /* Hauteur fixe maximale */
+  min-height: 120px;      /* Hauteur fixe minimale */
+  width: 100%;           /* Prend toute la largeur disponible */
 }
 
 /* Style pour la catégorie et l'intitulé */
@@ -312,16 +313,18 @@ progress::-webkit-progress-value {
   font-size: 16px;
   margin: 0;
   line-height: 1.4;
+  word-break: break-word; /* Permet de casser les mots longs */
 }
 
 /* ============================================
-   ADAPTATION POUR MOBILE (optionnel)
+   ADAPTATION POUR MOBILE
    ============================================ */
 @media (max-width: 600px) {
   #point-container {
-    max-height: 100px;    /* Hauteur légèrement réduite sur mobile */
-    min-height: 100px;
+    max-height: 100px;    /* Hauteur fixe sur mobile */
+    min-height: 100px;    /* Hauteur fixe sur mobile */
     padding: 12px;
+    font-size: 14px;     /* Réduit légèrement la taille du texte */
   }
 
   #point-container h2 {
@@ -330,5 +333,6 @@ progress::-webkit-progress-value {
 
   #point-container h3 {
     font-size: 14px;
+    line-height: 1.3;
   }
 }

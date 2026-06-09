@@ -123,10 +123,15 @@ body {
 /* Conteneur pour les boutons principaux (sur la même ligne) */
 #boutons-principaux {
   display: flex;
-  gap: 10px;             /* Espacement entre les boutons */
-  margin: 15px 0;
+  gap: 10px;
   justify-content: center;
-  flex-wrap: wrap;       /* Permet un retour à la ligne si nécessaire */
+  flex-wrap: nowrap; /* ✅ IMPORTANT : empêche le retour à la ligne */
+}
+
+#boutons-principaux .btn {
+  flex: 1;
+  width: auto;
+  min-width: 0; /* ✅ évite que ça casse la ligne */
 }
 
 /* Conteneur pour les boutons secondaires (en colonne) */

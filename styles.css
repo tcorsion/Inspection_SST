@@ -188,7 +188,7 @@ body {
   /* Boutons principaux sur la même ligne */
   #boutons-principaux .btn {
     flex: 1;
-    min-width: 0;       /* Permet aux boutons de rétrécir */
+    min-width: 100;       /* Permet aux boutons de rétrécir */
   }
 
   /* Boutons secondaires en colonne (déjà le cas par défaut) */

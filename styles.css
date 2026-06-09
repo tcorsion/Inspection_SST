@@ -117,57 +117,49 @@ body {
 }
 
 /* ============================================
-   DISPOSITION DES BOUTONS
+   STYLES POUR LES BOUTONS PRINCIPAUX
    ============================================ */
 
-/* Conteneur pour les boutons principaux (Conforme / Non conforme) */
+/* Conteneur pour les boutons principaux */
 #boutons-principaux {
   display: flex;
-  gap: 15px;             /* Espacement entre les boutons */
-  margin: 20px 0;
-  justify-content: center; /* Centre les boutons horizontalement */
-  flex-wrap: wrap;       /* Permet un retour à la ligne si nécessaire (mobile) */
+  gap: 10px;             /* Espacement réduit pour mobile */
+  margin: 15px 0;
+  justify-content: center;
+  flex-wrap: wrap;       /* Autorise le retour à la ligne si vraiment nécessaire */
 }
 
-/* Conteneur pour les boutons secondaires (Valider / Retour) */
-#boutons-secondaires {
-  display: flex;
-  gap: 15px;             /* Espacement entre les boutons */
-  margin: 10px 0;
-  justify-content: center; /* Centre les boutons horizontalement */
-  flex-wrap: wrap;       /* Permet un retour à la ligne si nécessaire (mobile) */
-}
-
-/* Style spécifique pour les boutons Conforme et Non conforme */
-#btnConforme, #btnNonConforme {
-  padding: 50px 25px;    /* Augmente la taille du padding (hauteur, largeur) */
-  font-size: 20px;        /* Taille de la police plus grande */
-  min-width: 180px;      /* Largeur minimale pour uniformiser */
-}
-
-/* Style commun pour tous les boutons */
+/* Style de base pour TOUS les boutons */
 .btn {
-  padding: 15px 25px;    /* Taille des boutons */
+  padding: 12px 15px;    /* Padding réduit */
   border: none;
   border-radius: 8px;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-width: 160px;      /* Largeur minimale pour uniformiser */
   text-align: center;
   font-weight: bold;
 }
 
-/* Effet au survol */
-.btn:hover:not(:disabled) {
-  opacity: 0.9;
-  transform: scale(1.02);
+/* Style SPÉCIFIQUE pour Conforme et Non conforme */
+#btnConforme, #btnNonConforme {
+  min-width: 120px;      /* Largeur minimale réduite */
+  max-width: 150px;     /* Largeur maximale pour éviter qu'ils ne soient trop larges */
+  padding: 12px 10px;   /* Padding ajusté */
+  font-size: 16px;      /* Taille de police adaptée */
 }
 
-/* Effet au clic */
-.btn:active:not(:disabled) {
-  transform: scale(0.98);
+/* Style pour les autres boutons (Valider Non Conforme, Retour) */
+#btnValiderNonConforme, #btnRetour {
+  min-width: 140px;
+  padding: 12px 20px;
 }
+
+/* Couleurs des boutons */
+.btn-vert { background-color: #4CAF50; color: white; }
+.btn-rouge { background-color: #f44336; color: white; }
+.btn-bleu { background-color: #2196F3; color: white; }
+.btn-gris { background-color: #9E9E9E; color: white; }
 
 /* Boutons désactivés */
 .btn:disabled {
@@ -175,54 +167,36 @@ body {
   cursor: not-allowed;
 }
 
-/* Couleurs des boutons */
-.btn-vert {
-  background-color: #4CAF50;
-  color: white;
-}
+/* Effets au survol/clic */
+.btn:hover:not(:disabled) { opacity: 0.9; transform: scale(1.02); }
+.btn:active:not(:disabled) { transform: scale(0.98); }
 
-.btn-rouge {
-  background-color: #f44336;
-  color: white;
-}
-
-.btn-bleu {
-  background-color: #2196F3;
-  color: white;
-}
-
-.btn-gris {
-  background-color: #9E9E9E;
-  color: white;
-}
-
-/* Adaptation pour les petits écrans */
+/* ============================================
+   ADAPTATION POUR MOBILE
+   ============================================ */
 @media (max-width: 600px) {
-  /* Ne PAS mettre #boutons-principaux en colonne */
   #boutons-principaux {
-    flex-direction: row; /* Garde l'affichage en ligne */
-    flex-wrap: wrap;     /* Permet un retour à la ligne si nécessaire */
+    gap: 8px;            /* Espacement encore plus réduit */
     justify-content: center;
-    gap: 10px;          /* Réduit légèrement l'espacement */
   }
 
-  /* Mettre SEULEMENT #boutons-secondaires en colonne */
+  /* Réduire encore la taille des boutons Conforme/Non conforme sur mobile */
+  #btnConforme, #btnNonConforme {
+    min-width: 100px;    /* Largeur minimale réduite */
+    max-width: 200px;   /* Largeur maximale réduite */
+    padding: 40px 8px;  /* Padding encore plus réduit */
+    font-size: 14px;    /* Taille de police réduite */
+  }
+
+  /* Boutons secondaires en colonne */
   #boutons-secondaires {
     flex-direction: column;
     align-items: center;
   }
 
-  /* Ajuster la taille des boutons pour mobile */
-  #btnConforme, #btnNonConforme {
-    padding: 12px 20px; /* Réduit légèrement la taille pour mobile */
-    font-size: 16px;
-    min-width: 120px;  /* Largeur minimale adaptée */
-  }
-
-  /* Style pour les autres boutons */
-  .btn {
+  #btnValiderNonConforme, #btnRetour {
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 }
 

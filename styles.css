@@ -117,36 +117,43 @@ body {
 }
 
 /* ============================================
-   STYLES POUR LES BOUTONS
+   DISPOSITION DES BOUTONS
    ============================================ */
 
-/* Conteneur des boutons principaux */
-#boutons-container {
+/* Conteneur pour les boutons principaux (Conforme / Non conforme) */
+#boutons-principaux {
   display: flex;
-  gap: 15px;
+  gap: 15px;             /* Espacement entre les boutons */
   margin: 20px 0;
-  flex-wrap: wrap;
-  justify-content: center;
+  justify-content: center; /* Centre les boutons horizontalement */
+  flex-wrap: wrap;       /* Permet un retour à la ligne si nécessaire (mobile) */
 }
 
-/* Conteneur des boutons secondaires (optionnel) */
-#boutons-navigation {
+/* Conteneur pour les boutons secondaires (Valider / Retour) */
+#boutons-secondaires {
   display: flex;
-  gap: 15px;
+  gap: 15px;             /* Espacement entre les boutons */
   margin: 10px 0;
-  flex-wrap: wrap;
-  justify-content: center;
+  justify-content: center; /* Centre les boutons horizontalement */
+  flex-wrap: wrap;       /* Permet un retour à la ligne si nécessaire (mobile) */
 }
 
-/* Style de base pour tous les boutons */
+/* Style spécifique pour les boutons Conforme et Non conforme */
+#btnConforme, #btnNonConforme {
+  padding: 50px 25px;    /* Augmente la taille du padding (hauteur, largeur) */
+  font-size: 20px;        /* Taille de la police plus grande */
+  min-width: 180px;      /* Largeur minimale pour uniformiser */
+}
+
+/* Style commun pour tous les boutons */
 .btn {
-  padding: 15px 25px;
+  padding: 15px 25px;    /* Taille des boutons */
   border: none;
   border-radius: 8px;
   font-size: 18px;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-width: 150px;
+  min-width: 160px;      /* Largeur minimale pour uniformiser */
   text-align: center;
   font-weight: bold;
 }
@@ -189,9 +196,11 @@ body {
   color: white;
 }
 
-/* Adaptation pour les petits écrans */
+/* ============================================
+   ADAPTATION POUR MOBILE
+   ============================================ */
 @media (max-width: 600px) {
-  #boutons-container, #boutons-navigation {
+  #boutons-principaux, #boutons-secondaires {
     flex-direction: column; /* Passe en colonne sur mobile */
     align-items: center;   /* Centre les boutons */
   }

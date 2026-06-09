@@ -196,18 +196,33 @@ body {
   color: white;
 }
 
-/* ============================================
-   ADAPTATION POUR MOBILE
-   ============================================ */
+/* Adaptation pour les petits écrans */
 @media (max-width: 600px) {
-  #boutons-principaux, #boutons-secondaires {
-    flex-direction: column; /* Passe en colonne sur mobile */
-    align-items: center;   /* Centre les boutons */
+  /* Ne PAS mettre #boutons-principaux en colonne */
+  #boutons-principaux {
+    flex-direction: row; /* Garde l'affichage en ligne */
+    flex-wrap: wrap;     /* Permet un retour à la ligne si nécessaire */
+    justify-content: center;
+    gap: 10px;          /* Réduit légèrement l'espacement */
   }
 
+  /* Mettre SEULEMENT #boutons-secondaires en colonne */
+  #boutons-secondaires {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Ajuster la taille des boutons pour mobile */
+  #btnConforme, #btnNonConforme {
+    padding: 12px 20px; /* Réduit légèrement la taille pour mobile */
+    font-size: 16px;
+    min-width: 120px;  /* Largeur minimale adaptée */
+  }
+
+  /* Style pour les autres boutons */
   .btn {
-    width: 100%;         /* Largeur à 100% sur mobile */
-    margin-bottom: 10px; /* Espacement vertical */
+    width: 100%;
+    margin-bottom: 10px;
   }
 }
 
